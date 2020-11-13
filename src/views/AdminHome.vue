@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="AdminHome">
     <el-container>
       <el-aside width="18">
         <el-aside>
@@ -17,11 +17,11 @@
       <el-container>
         <el-header><h1>智慧医疗数据管理系统</h1></el-header>
         <div style="height: 800px;overflow: auto"><router-view></router-view></div>
-<!--        <el-main ><router-view></router-view></el-main>-->
+        <!--        <el-main ><router-view></router-view></el-main>-->
         <el-footer><br><br><br>Copyright 发际线与我作队</el-footer>
       </el-container>
     </el-container>
-<!--    <el-button type="primary" round @click="submit">跳转</el-button>-->
+    <!--    <el-button type="primary" round @click="submit">跳转</el-button>-->
 
 
   </div>
@@ -31,7 +31,7 @@
 
 
 export default {
-  name: 'Home',
+  name: 'AdminHome',
   data () {
     return {
 
