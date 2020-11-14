@@ -50,8 +50,8 @@ export default {
 </script>
 <style scoped>
 .el-header {
-  background-color: #4d92ec;
-  color: #3c57ee;
+  /*background-color: #4d92ec;*/
+  /*color: #3c57ee;*/
   text-align: center;
   line-height: 20px;
 }

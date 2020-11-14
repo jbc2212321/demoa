@@ -80,6 +80,14 @@ name: "Register",
         path:"/"
       })
     },
+    clearAll:function (){
+      this.username=''
+      this.password=''
+      this.check_password=''
+      this.phoneNumber=''
+      this.checked=false
+      this.value=''
+    },
     getRegister:function (){
       if(!(/^1[34578]\d{9}$/.test(this.phoneNumber))){
         alert("手机号码有误，请重填");
@@ -102,12 +110,24 @@ name: "Register",
           value:this.value,
         }
       }).then(res=>{
-        // if (!res.data){
-        //   alert("改手机号已被注册！")
-        //   return ;
-        // }
-        console.log(typeof res.data)
-        console.log(res.data)
+        if (res.data==="手机号已被注册!"){
+          this.clearAll()
+          this.$message({
+            message: '改手机号已被注册！',
+            type: 'error',
+            duration:2000,
+          })
+        }else {
+          this.$message({
+            message: '注册成功! 即将跳转至登录界面',
+            type: 'success',
+            duration:2000,
+          })
+          this.$router.push({
+            path:"/"
+          })
+        }
+
       })
 
 
