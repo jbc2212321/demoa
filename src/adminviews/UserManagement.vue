@@ -209,13 +209,10 @@ name: "UserManagement",
       nativePlace:"",
       works:"",
       evaluation:"",
-      //
       //这里是病人的详细信息
       patientID:"",
       paccountNo:"",
       patientName:"",
-
-
       //
 
     }
@@ -291,7 +288,38 @@ name: "UserManagement",
 
     },
     deleteRow(index, tableData){
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios({
+          url: "http://localhost:8096/deleteDocOrPatient",
+          method: "post",
+          data:{
+            phone:tableData[index]["tel"],
+            tag:tableData[index]["tag"],
+          }
+        }).then(res=>{
+          this.$axios({
+            url: "http://localhost:8096/getAllDocAndPatient",
+            method: "get",
+          }).then(res=>{
+            this.AllAccount=res.data
+            console.log(this.AllAccount)
+          })
+        })
 
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     handleSizeChange(val) {
       this.currentPage = 1
@@ -309,7 +337,7 @@ name: "UserManagement",
           done();
         })
         .catch(_ => {});
-    }
+    },
   }
 }
 </script>
