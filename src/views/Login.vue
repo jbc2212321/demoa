@@ -80,9 +80,21 @@ export default {
           alert("用户名或密码错误!")
         }else {
           this.changeLogin(this.value)
-          this.$router.push({
-            path: 'admin/UserManagement'
-          })
+          this.$session.set("phone",this.username)
+          switch (this.value) {
+            case '1':
+              this.$router.push({
+                path: 'admin/UserManagement'
+              })
+              break
+            case '2':
+              console.log(this.value)
+              this.$router.push({
+                path: 'patient/MyDoctor'
+              }).catch(() =>{})
+              break
+          }
+
         }
       })
     },

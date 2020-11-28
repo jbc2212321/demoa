@@ -69,9 +69,7 @@
     :page-sizes="[5, 9, 15, 20]"
     :page-size="10"
     layout="total, sizes, prev, pager, next, jumper"
-    :total="tableData.length"
-
-  >
+    :total="tableData.length">
   </el-pagination>
 
 <!--  医生表格-->

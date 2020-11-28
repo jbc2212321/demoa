@@ -8,6 +8,7 @@ import Error404 from '@/views/Error404'
 import AdminHome from '@/views/AdminHome'
 import UserManagement from '@/adminviews/UserManagement'
 import Register from '@/views/Register'
+import MyDoctor from '../patientviews/MyDoctor'
 
 
 Vue.use(VueRouter)
@@ -31,6 +32,12 @@ const routes = [
     path: '/admin',
     name: 'AdminHome',
     component: AdminHome,
+    children:[
+      {
+        path:"/admin/UserManagement",
+        component:UserManagement
+      }
+    ],
     meta: {
       requireAuth: true,
       identity:0
@@ -68,9 +75,36 @@ const routes = [
     component: () => import(/* webpackChunkName: "patient" */ '../views/PatientHome.vue'),
     meta: {
       requireAuth: true,
-      identity:1
+      identity:2
     },
+    children: [
+      {
+        path:"/patient/MyDoctor",
+        component:MyDoctor,
+        meta: {
+          requireAuth: true,
+          identity:2
+        },
+      },
+    ],
     beforeEnter: (to, from, next) => {
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/patient/MyDoctor',
+    name: 'MyDoctor',
+    component: MyDoctor,
+    meta: {
+      requireAuth: true,
+      identity:2
+    },
+    beforeEnter:(to,from,next)=>{
       if (to.meta.identity!==store.state.identity){
         alert("用户身份不匹配!")
         next({ path: '/' })

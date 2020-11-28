@@ -26,7 +26,7 @@ export default new Vuex.Store({
         default:
           break
       }
-
+      console.log("state:"+state.identity)
     },
     OutLogin:function (state) {
       state.isLogin = false
