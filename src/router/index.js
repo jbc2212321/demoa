@@ -9,6 +9,11 @@ import AdminHome from '@/views/AdminHome'
 import UserManagement from '@/adminviews/UserManagement'
 import Register from '@/views/Register'
 import MyDoctor from '../patientviews/MyDoctor'
+import MyCase from '../patientviews/MyCase'
+import MyData from '../patientviews/MyData'
+import DoctorData from '../doctorviews/DoctorData'
+import DoctorHome from '../views/DoctorHome'
+import MyPatient from '../doctorviews/MyPatient'
 
 
 Vue.use(VueRouter)
@@ -86,6 +91,22 @@ const routes = [
           identity:2
         },
       },
+      {
+        path:"/patient/MyCase",
+        component:MyCase,
+        meta: {
+          requireAuth: true,
+          identity:2
+        },
+      },
+      {
+        path:"/patient/MyData",
+        component:MyData,
+        meta: {
+          requireAuth: true,
+          identity:2
+        },
+      }
     ],
     beforeEnter: (to, from, next) => {
       if (to.meta.identity!==store.state.identity){
@@ -114,12 +135,102 @@ const routes = [
     }
   },
   {
-    path: '/doctor',
-    name: 'DoctorHome',
-    component: () => import(/* webpackChunkName: "doctor" */ '../views/DoctorHome.vue'),
+    path: '/patient/MyCase',
+    name: 'MyCase',
+    component: MyCase,
     meta: {
       requireAuth: true,
       identity:2
+    },
+    beforeEnter:(to,from,next)=>{
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/patient/MyData',
+    name: 'MyData',
+    component: MyData,
+    meta: {
+      requireAuth: true,
+      identity:2
+    },
+    beforeEnter:(to,from,next)=>{
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/doctor',
+    name: 'DoctorHome',
+    component: DoctorHome,
+    children: [
+      {
+        path: '/doctor/DoctorData',
+        name: 'DoctorData',
+        component:DoctorData ,
+        meta: {
+          requireAuth: true,
+          identity: 3
+        }
+      },
+      {
+        path: '/doctor/MyPatient',
+        name: 'MyPatient',
+        component:MyPatient,
+        meta: {
+          requireAuth: true,
+          identity: 3
+        }
+      },
+      ],
+    meta: {
+      requireAuth: true,
+      identity:3
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        console.log("???")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/doctor/DoctorData',
+    name: 'DoctorData',
+    component:DoctorData ,
+    meta: {
+      requireAuth: true,
+      identity: 3
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        console.log("???")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/doctor/MyPatient',
+    name: 'MyPatient',
+    component:MyPatient ,
+    meta: {
+      requireAuth: true,
+      identity: 3
     },
     beforeEnter: (to, from, next) => {
       if (to.meta.identity!==store.state.identity){

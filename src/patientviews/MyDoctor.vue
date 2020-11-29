@@ -215,12 +215,15 @@
       },
     },
     mounted () {
+      //初始化医生列表
       this.$axios({
         url: 'http://localhost:8096/getAllDoc',
         method: 'get',
       }).then(res => {
         this.DocList = res.data
       })
+
+      //初始化选择列表
       this.$axios({
         url: 'http://localhost:8096/getRelationship',
         method: 'post',
@@ -254,16 +257,44 @@
           .catch(_ => {
           })
       },
+      checkChoose(){
+        var yk=0;
+        var xy=0;
+        var list=this.AfterList
+        for (let i = 0; i <list.length ; i++) {
+          if (list[i]["choose"]==="已选") {
+            if (list[i]["tag"] === "血液科") {
+              xy++
+            } else if (list[i]["tag"] === "口腔科") {
+              yk++
+            }
+          }
+        }
+        if (xy===1 &&yk===1){
+          return false
+        }else {
+          return true
+        }
+      },
       choose(row){
-        row["choose"]="已选"
-        if (!this.checked.includes(row)){
-          this.checked.push(row)
+        if (this.checkChoose()){
+          if (!this.checked.includes(row)){
+            row["choose"]="已选"
+            this.checked.push(row)
+            this.$message({
+              showClose: true,
+              message: '选择成功！',
+              type: 'success'
+            })
+          }
+        }else {
           this.$message({
             showClose: true,
-            message: '选择成功！',
-            type: 'success'
+            message: '每个部门只能选择一个医生!',
+            type: 'warning'
           })
         }
+
       },
       cancel(row){
         row["choose"]="未选"

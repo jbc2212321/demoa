@@ -93,6 +93,12 @@ export default {
                 path: 'patient/MyDoctor'
               }).catch(() =>{})
               break
+            case '3':
+              console.log(this.value)
+              this.$router.push({
+                path: 'doctor/MyPatient'
+              }).catch(() =>{})
+              break
           }
 
         }

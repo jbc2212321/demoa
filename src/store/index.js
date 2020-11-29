@@ -21,7 +21,7 @@ export default new Vuex.Store({
           state.identity=2
           break
         case '3':
-          state.identity=0
+          state.identity=3
           break
         default:
           break
