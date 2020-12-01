@@ -5,7 +5,7 @@
   <div id="layout">
     <el-row>
       <div class="tex"><el-col :span="1" :offset="8">用户名</el-col></div>
-      <el-col :span="6" :offset="0"><div><el-input placeholder="请输入用户名" v-model="username" clearable></el-input></div></el-col>
+      <el-col :span="6" :offset="0"><div><el-input placeholder="请输入用户名" minlength="2" maxlength="10" v-model="username" clearable></el-input></div></el-col>
     </el-row>
     <el-row>
       <div class="tex"><el-col :span="1" :offset="8">手机号</el-col></div>
@@ -13,12 +13,12 @@
     </el-row>
     <el-row>
       <div class="tex"><el-col :span="1" :offset="8">输入密码</el-col></div>
-      <el-col :span="6" :offset="0"><div ><el-input placeholder="请输入密码" v-model="password" show-password></el-input></div></el-col>
+      <el-col :span="6" :offset="0"><div ><el-input placeholder="请输入密码" minlength="6" maxlength="16" v-model="password" show-password></el-input></div></el-col>
     </el-row>
 
     <el-row>
       <div class="tex"><el-col :span="1" :offset="8">确认密码</el-col></div>
-      <el-col :span="6" :offset="0"><div ><el-input placeholder="请确认密码" v-model="check_password" show-password></el-input></div></el-col>
+      <el-col :span="6" :offset="0"><div ><el-input placeholder="请确认密码" minlength="6" maxlength="16" v-model="check_password" show-password></el-input></div></el-col>
     </el-row>
 
     <el-row>
@@ -89,16 +89,44 @@ name: "Register",
       this.value=''
     },
     getRegister:function (){
+      if (this.username.length<2||this.username.length>10){
+        this.$message({
+          type: 'error',
+          message: '用户名必须在2-10之间!'
+        })
+        return
+      }
       if(!(/^1[34578]\d{9}$/.test(this.phoneNumber))){
         alert("手机号码有误，请重填");
         return ;
       }
+      if (this.username.length<6||this.username.length>16){
+        this.$message({
+          type: 'error',
+          message: '密码必须在6-16之间!'
+        })
+        return
+      }
       if (this.password!==this.check_password){
-        alert("重复密码不正确!")
+        this.$message({
+          type: 'error',
+          message: '重复密码不正确!'
+        })
+        return ;
+      }
+      if (this.value===""){
+        this.$message({
+          type: 'warning',
+          message: '请选择用户权限!'
+        })
         return ;
       }
       if (!this.checked){
-        alert("请认真阅读并同意用户协议!")
+        this.$message({
+          type: 'warning',
+          message: '请勾选我已阅读用户协议!'
+        })
+        return;
       }
       this.$axios({
         url: "http://localhost:8096/addUser",

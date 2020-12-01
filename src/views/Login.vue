@@ -5,11 +5,11 @@
   <br>
   <h1>登录</h1>
       <el-row >
-        <el-col :span="6" :offset="9"><div id="app"><el-input placeholder="请输入账号" v-model="username" clearable></el-input></div></el-col>
+        <el-col :span="6" :offset="9"><div id="app"><el-input placeholder="请输入账号" minlength="2" maxlength="10" v-model="username" clearable></el-input></div></el-col>
       </el-row>
       <br>
       <el-row >
-        <el-col :span="6" :offset="9"><div class="grid-content bg-purple"><div id="app2"><el-input placeholder="请输入密码" v-model="password" show-password></el-input></div></div></el-col>
+        <el-col :span="6" :offset="9"><div class="grid-content bg-purple"><div id="app2"><el-input placeholder="请输入密码" minlength="6" maxlength="16" v-model="password" show-password></el-input></div></div></el-col>
       </el-row>
       <br>
       <el-row>

@@ -79,14 +79,14 @@
             </el-dialog>
 
             <!-- 主界面 -->
-            <el-button @click="dialogVisible = true">查询病历</el-button>
+            <el-button @click="beforeDialog">查询病历</el-button>
             <el-table
-                    :data="tableData"
+                    :data="PageData"
                     style="width: 100%"
-                    height="600">
+                    height="580">
 
                 <el-table-column
-                        prop="num"
+                        prop="tableId"
                         label="体检单号"
                         sortable
                         width="120"
@@ -94,13 +94,13 @@
                 </el-table-column>
 
                 <el-table-column
-                        prop="tag"
+                        prop="office"
                         label="科室"
                         width="180">
                     <template slot-scope="scope">
                         <el-tag
-                                :type="scope.row.tag === '口腔科' ? 'primary' : 'success'"
-                                disable-transitions>{{scope.row.tag}}</el-tag>
+                                :type="scope.row.office === 'tooth' ? 'primary' : 'success'"
+                                disable-transitions>{{scope.row.office}}</el-tag>
                     </template>
                 </el-table-column>
 
@@ -125,22 +125,144 @@
             </el-table>
         </template>
 
+
         <el-pagination
-                background
-                layout="prev, pager, next"
-                :total="1000">
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 9, 15, 20]"
+                :page-size="9"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="CaseData.length">
         </el-pagination>
+
+<!--        血液科体检报告单-->
+        <el-dialog
+                :visible.sync="BloodVisible"
+                width="60%"
+                :before-close="handleClose">
+      <span>
+        <div class='title'>体检单号：{{examinationNo}}</div>
+        <table border="1"
+               cellspacing="0px"
+               style="margin:auto;"
+               width="800px">
+    <tr height="50"  style="text-align: center;">
+        <td width="100">姓名</td>
+        <td width="100">{{patientName}}</td>
+        <td width="100">性别</td>
+        <td width="100">{{sex}}</td>
+        <td width="100">体检日期</td>
+        <td width="100">2020/11/30</td>
+    </tr>
+    <tr height="50"  style="text-align: center;">
+      <td width="100">代号</td>
+      <td width="200" colspan="2">项目</td>
+      <td width="200" colspan="2">结果</td>
+      <td width="100">参考值</td>
+    </tr>
+            <!-- 白细胞 -->
+    <tr height="50"  style="text-align: center;">
+      <td width="100">WBC</td>
+      <td width="200" colspan="2">白细胞</td>
+      <td width="200" colspan="2">{{wbc}}</td>   <!-- 检测值 -->
+      <td width="100">4--10 10^9/L</td>
+    </tr>
+            <!-- 红细胞 -->
+    <tr height="50"  style="text-align: center;">
+      <td width="100">RBC</td>
+      <td width="200" colspan="2">红细胞</td>
+      <td width="200" colspan="2">{{wbc}}</td>   <!-- 检测值 -->
+      <td width="100">3.5--5.5</td>
+    </tr>
+            <!-- 血小板 -->
+    <tr height="50"  style="text-align: center;">
+      <td width="100">PLT</td>
+      <td width="200" colspan="2">血小板</td>
+      <td width="200" colspan="2">{{plt}}</td>   <!-- 检测值 -->
+      <td width="100">100-300 10^9/L</td>
+    </tr>
+
+</table></span>
+        </el-dialog>
+        <!--        血液科体检报告单-->
+
+<!--口腔科体检报告单-->
+        <el-dialog
+                :visible.sync="ToothVisible"
+                width="60%"
+                :before-close="handleClose">
+      <span>
+        <div class='title'>体检单号：{{examinationNo}}</div>
+        <table border="1"
+               cellspacing="0px"
+               style="margin:auto;"
+               width="800px">
+    <tr height="50"  style="text-align: center;">
+        <td width="100">姓名</td>
+        <td width="100">{{patientName}}</td>
+        <td width="100">性别</td>
+        <td width="100">{{sex}}</td>
+        <td width="100">{{examinationDate}}</td>
+        <td width="100">2020/11/30</td>
+    </tr>
+    <tr height="50"  style="text-align: center;">
+      <td width="50" td rowspan="4">口腔</td>
+      <td width="150" colspan="2">项目</td>
+      <td width="200" colspan="3">结果</td>
+    </tr>
+            <!-- 叩痛 pain -->
+    <tr height="50"  style="text-align: center;">
+      <td width="150" colspan="2">叩痛</td> <!-- pain -->
+      <td width="200" colspan="3">{{pain}}</td> <!-- 检测值 由轻到重五个等级1-5 -->
+    </tr>
+            <!-- 松动度 mobility -->
+    <tr height="50"  style="text-align: center;">
+      <td width="150" colspan="2">松动度</td>  <!-- mobility -->
+      <td width="200" colspan="3">{{mobility}}</td>  <!-- 检测值 不松动-严重由1-3表示 -->
+    </tr>
+            <!-- 牙石 tartar -->
+    <tr height="50"  style="text-align: center;">
+      <td width="150" colspan="2">项目</td> <!-- tartar -->
+      <td width="200" colspan="3">{{tartar}}</td> <!-- 检测值 有无牙石 牙石数量从少到多由1-5表示 -->
+    </tr>
+
+</table></span>
+        </el-dialog>
+<!--口腔科体检报告单-->
     </div>
 </template>
 
 <script>
-    import qs from "qs"
   const typesoptions1 = [{label:'红细胞',value:'红细胞'},{label:'白细胞',value:'白细胞'},{label:'血小板',value:'血小板'}];
   const typesoptions2 = [{label:'叩痛',value:'叩痛'},{label:'松动度',value:'松动度'},{label:'牙石',value:'牙石'}];
+  const translation ={
+    "红细胞":"rbc",
+    "白细胞":"wbc",
+    "血小板":"plt",
+    "叩痛":"pain",
+    "松动度":"mobility",
+    "牙石":"tartar",
+  }
+  // const typesoptions2 = [{label:'叩痛',value:'pain'},{label:'松动度',value:'mobility"'},{label:'牙石',value:'tartar'}];
   export default {
     name: 'MyCase',
     data(){
       return {
+        //病人信息
+        patientName:"",
+        sex:"",
+        examinationDate:"",
+        examinationNo:"",
+        //血液科数据
+        plt:"",  //血小板
+        rbc:"", //红细胞
+        wbc:"",  //白细胞
+        //口腔科数据
+        pain:"", //叩痛
+        mobility:"",  //松动度
+        tartar:"",    //牙石
+
         offices: [{
           value: '口腔科',
           label: '口腔科',
@@ -173,45 +295,73 @@
             }
           }]
         },
+        AllCase:[],//筛选后的病例
+        currentPage:1,//默认开始页面
+        pagesize:9,
+        filters:[{ text: '血液科', value: 'blood' }, { text: '口腔科', value: 'tooth' }],
+        filter:"",
         date1: '',
         date2: '',
         min:'',
         max:'999',
-        value: '',//科室
+        value: [],//科室
         value1: [],//项目
         value2: '',//项目
         screen  :[],  //筛选
         screenJson:[],
-        // value2, //筛选项目
-        // type:typesoptions1,
         types:"",  //选择对应科室的相关项目，对应复选框内的选项
-        tableData: [{
-          num: '114',
-          date:'2020-11-28',
-          tag: '口腔科',
-        }, {
-          num: '514',
-          date:'2020-11-27',
-          tag: '血液科',
-        }, {
-          num: '1919',
-          date:'2020-11-26',
-          tag: '血液科',
-        }, {
-          num: '810',
-          date:'2020-11-25',
-          tag: '口腔科',
-        }],
-        dialogVisible: false
+        dialogVisible: false,
+        BloodVisible:false,
+        ToothVisible:false,
       }
     },
+    computed:{
+        CaseData:function (){
+        return this.AllCase.filter(item => {
+          if (this.filter.length===1) {
+            if (item["tag"]!==this.filter[0]) {
+              return false
+            }
+          }
+          return true
+        })
+      },
+      PageData:function (){
+          if (this.AllCase.length===0)
+          {
+            return []
+          }
+        return this.CaseData.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
+      }
+    },
+    mounted () {
+      this.$axios({
+        url:"http://localhost:8096/getPatientDetail",
+        method: "post",
+        data:{
+          phone:this.$session.get("phone")
+        }
+      }).then(res=>{
+        this.patientName=res.data["patientName"]
+        this.sex=res.data["sex"]
+      })
+    },
     methods: {
+      beforeDialog(){  //点开查询
+        this.value=""
+        this.value1=[]
+        this.value2=[]
+        this.dialogVisible = true
+      },
       selectChanged(){   //通过选择科室有不同的列表
+        // console.log(typeof   this.value)
         if (this.value==="口腔科"){
           this.types= typesoptions2
         }else if (this.value==="血液科"){
           this.types= typesoptions1
         }
+        // console.log(this.value)
+        // console.log(this.types)
       },
       selectProject(){
         var json = [];
@@ -225,18 +375,24 @@
       },
       screenSubmit(){
         var row={}
-        row["筛选项目"]=this.value2
-        row["下限"]=this.min
-        row["上限"]=this.max
+        row["values"]=translation[this.value2]
+        row["down"]=this.min
+        row["up"]=this.max
         this.screenJson.push(row)
         // this.screenJson[this.value2]=row
-        // console.log(this.screenJson)
-        // console.log(JSON.stringify(this.screenJSon))
+        this.$message({
+          showClose: true,
+          message: '筛选成功！',
+          type: 'success'
+        })
       },
       submit(){
-        console.log("*************************")
-        console.log(typeof this.screenJson)
-
+        var tablename=this.value
+        if (tablename==="口腔科"){
+             tablename="tooth"
+        }else if (tablename==="血液科"){
+          tablename="blood"
+        }
         this.$axios({
           url:"http://localhost:8096/selectPatientCase",
           method:"post",
@@ -244,23 +400,22 @@
             "Content-Type":'application/json; charset=UTF-8'
           },
           data:{
-              "表名":this.value,
-              "病人id":this.$session.get("phone"),
-              "开始日期":this.date1,
-              "结束日期":this.date2,
+            phone:this.$session.get("phone"),
+              "tableName":tablename,
+              "patientId":this.$session.get("phone"),
+              "startDate":this.date1,
+              "endDate":this.date2,
               value:this.screenJson,
-            // value:["叩痛": {"下限": 0, "上限": 999}],
-            // value:["ndm":{"下线"}]
           }
+        }).then(res=>{
+          this.$message({
+            showClose: true,
+            message: '提交成功！',
+            type: 'success'
+          })
+          this.AllCase=res.data
+          console.log(this.AllCase)
         })
-
-        // this.$axios.post("http://localhost:8096/selectPatientCase",qs.stringify({
-        //   "表名":this.value,
-        //   "病人id":this.$session.get("phone"),
-        //   "开始日期":this.date1,
-        //   "结束日期":this.date2,
-        //   value:this.screenJson,
-        // }))
       },
       open() {
         this.$confirm('此操作将永久删除该条目, 是否继续?', '提示', {
@@ -288,6 +443,31 @@
       },
       handleChange(value) {
         console.log(value);
+      },
+      handleSizeChange(val) {
+        this.currentPage = 1
+        this.pagesize=val
+      },
+      handleCurrentChange(val) {
+        this.currentPage=val
+      },
+      handleEdit(value,row){
+        console.log(row)
+        if(row["office"]==="血液科"){
+          this.BloodVisible=true
+          this.examinationDate=row["date"]
+          this.plt=row["plt"]
+          this.wbc=row["wbc"]
+          this.rbc=row["rbc"]
+          this.examinationNo=row["tableId"]
+        }else {
+          this.ToothVisible=true
+          this.examinationDate=row["date"]
+          this.pain=row["pain"]
+          this.tartar=row["tartar"]
+          this.mobility=row["mobility"]
+          this.examinationNo=row["tableId"]
+        }
       }
     }
   }

@@ -6,7 +6,7 @@
           <el-menu :default-openeds="['1']">
             <el-submenu index="1">
               <template slot="title"><i class="el-icon-menu"></i>智慧医疗-管理员</template>
-              <el-menu-item index="1-1"><router-link to="/admin/UserManagement">用户管理</router-link></el-menu-item>
+              <el-menu-item index="1-1" ><router-link to="/admin/UserManagement">用户管理</router-link></el-menu-item>
               <el-menu-item index="1-2">日志管理</el-menu-item>
               <el-menu-item index="1-3">数据查询</el-menu-item>
               <el-menu-item index="1-4">数据加密</el-menu-item>
@@ -50,8 +50,8 @@ export default {
 </script>
 <style scoped>
 .el-header {
-  background-color: #4d92ec;
-  color: #3c57ee;
+  /*background-color: #4d92ec;*/
+  /*color: #3c57ee;*/
   text-align: center;
   line-height: 20px;
 }

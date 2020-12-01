@@ -14,7 +14,7 @@ import MyData from '../patientviews/MyData'
 import DoctorData from '../doctorviews/DoctorData'
 import DoctorHome from '../views/DoctorHome'
 import MyPatient from '../doctorviews/MyPatient'
-
+import UploadCsv from '../adminviews/UploadCsv'
 
 Vue.use(VueRouter)
 
@@ -23,12 +23,12 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
-    children:[
-      {
-        path:"/admin/UserManagement",
-        component:UserManagement
-      }
-    ],
+    // children:[
+    //   {
+    //     path:"/admin/UserManagement",
+    //     component:UserManagement
+    //   }
+    // ],
     meta: { // 加一个自定义obj
       requireAuth: true // 这个参数 true 代表需要登录才能进入A
     }
@@ -40,9 +40,38 @@ const routes = [
     children:[
       {
         path:"/admin/UserManagement",
-        component:UserManagement
+        component:UserManagement,
+        meta: {
+          requireAuth: true,
+          identity:1
+        },
+      },
+      {
+        path:"/admin/UploadCsv",
+        component:UploadCsv,
+        meta: {
+          requireAuth: true,
+          identity:1
+        },
       }
     ],
+    meta: {
+      requireAuth: true,
+      identity:1
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/admin/UploadCsv',
+    name: 'UploadCsv',
+    component: UploadCsv,
     meta: {
       requireAuth: true,
       identity:0
@@ -50,7 +79,6 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (to.meta.identity!==store.state.identity){
         alert("用户身份不匹配!")
-        console.log("???")
         next({ path: '/' })
       }else {
         next()

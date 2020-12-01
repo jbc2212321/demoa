@@ -253,6 +253,12 @@
           .then(_ => {
             done()
             this.checked=[]
+            this.$axios({
+              url: 'http://localhost:8096/getAllDoc',
+              method: 'get',
+            }).then(res => {
+              this.DocList = res.data
+            })
           })
           .catch(_ => {
           })
@@ -260,7 +266,7 @@
       checkChoose(){
         var yk=0;
         var xy=0;
-        var list=this.AfterList
+        var list=this.AfterList.concat(this.checked)
         for (let i = 0; i <list.length ; i++) {
           if (list[i]["choose"]==="已选") {
             if (list[i]["tag"] === "血液科") {
@@ -311,7 +317,7 @@
       chooseDoc() {
         var yk=0;
         var xy=0;
-        var list=this.checked
+        var list=this.AfterList
         for (let i = 0; i <list.length ; i++) {
           if (list[i]["choose"]==="已选") {
             if (list[i]["tag"] === "血液科") {
@@ -321,11 +327,11 @@
             }
           }
         }
-        if (xy>1 ||yk>1){
+        if (xy===1 &&yk===1){
           this.$message({
             showClose: true,
-            message: '每个部门只能选择一个医生!',
-            type: 'warning'
+            message: '医师已经存在!',
+            type: 'error'
           })
           return false
         }
@@ -344,6 +350,12 @@
               type: 'success'
             })
             this.AfterList=this.checked
+          }).catch(reason => {
+            this.$message({
+              showClose: true,
+              message: '医师已经存在！',
+              type: 'error'
+            })
           })
         }
       },

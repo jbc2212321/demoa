@@ -75,7 +75,7 @@
 
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">提交修改</el-button>
-                <el-button type="danger">清空</el-button>
+<!--                <el-button type="danger">清空</el-button>-->
             </el-form-item>
         </el-form>
     </div>
@@ -128,7 +128,13 @@
         this.phoneNo=this.$session.get("phone") //这里为什么出错
         this.address=res.data["address"]
         this.birthday=res.data["birthday"]
-        this.sex=res.data["sex"]
+        if (res.data["sex"]==="F")
+        {
+          this.sex="男性"
+        }else {
+          this.sex="女性"
+        }
+
         this.introduction=res.data["introduction"]
         this.expertise=res.data["expertise"]
         this.achievements=res.data["achievements"]
@@ -147,7 +153,33 @@
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
+        console.log(this.sex)
+        this.$axios({
+          url:"http://localhost:8096/updateDocDetail",
+          method:"post",
+          data:{
+                DoctorPhone:this.$session.get("phone"),
+                sex:this.sex,
+                birthday:this.birthday,
+                nationality:this.nationality,
+                nation:this.nation,
+                college:this.college,
+                address:this.address,
+                expertise: this.expertise,    //擅长领域
+                works: this.works,        //相关著作
+                introduction: this.introduction,     //个人简介
+                achievements: this.achievements,     //个人成就
+                evaluation: this.evaluation,
+                nativePlace:this.nativePlace
+          }
+        }).then(res=>{
+          // console.log(res.data)
+          this.$message({
+            showClose: true,
+            message: '修改成功！',
+            type: 'success'
+          })
+        })
       }
     }
   }
