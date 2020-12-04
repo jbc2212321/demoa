@@ -100,7 +100,7 @@ name: "Register",
         alert("手机号码有误，请重填");
         return ;
       }
-      if (this.username.length<6||this.username.length>16){
+      if (this.password.length<6||this.password.length>16){
         this.$message({
           type: 'error',
           message: '密码必须在6-16之间!'

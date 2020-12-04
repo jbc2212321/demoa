@@ -5,7 +5,7 @@
   <br>
   <h1>登录</h1>
       <el-row >
-        <el-col :span="6" :offset="9"><div id="app"><el-input placeholder="请输入账号" minlength="2" maxlength="10" v-model="username" clearable></el-input></div></el-col>
+        <el-col :span="6" :offset="9"><div id="app"><el-input placeholder="请输入账号" minlength="11" maxlength="11" v-model="username" clearable></el-input></div></el-col>
       </el-row>
       <br>
       <el-row >

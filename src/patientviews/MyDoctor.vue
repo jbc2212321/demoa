@@ -180,6 +180,9 @@
       return {
         editDoctorPhone:"",
         checkList:['口腔科','血液科'],
+        xyList:['口腔科','血液科'],
+        ykList:['口腔科','血液科'],
+        chooseTag:"",
         checked:[],
         dialogVisible: false,
         editVisible:false,
@@ -266,24 +269,27 @@
       checkChoose(){
         var yk=0;
         var xy=0;
+        // console.log("AfterList:",this.AfterList)
         var list=this.AfterList.concat(this.checked)
+        // console.log("list:",list)
         for (let i = 0; i <list.length ; i++) {
-          if (list[i]["choose"]==="已选") {
+
             if (list[i]["tag"] === "血液科") {
               xy++
             } else if (list[i]["tag"] === "口腔科") {
               yk++
             }
-          }
+
         }
-        if (xy===1 &&yk===1){
+        console.log("xy:",xy,"yk:",yk)
+        if (xy===1&&yk===1){
           return false
-        }else {
-          return true
         }
+        return true;
       },
       choose(row){
         if (this.checkChoose()){
+          // console.log("check:",this.checkChoose())
           if (!this.checked.includes(row)){
             row["choose"]="已选"
             this.checked.push(row)
@@ -315,9 +321,11 @@
 
       },
       chooseDoc() {
+        console.log(this.checked)
         var yk=0;
         var xy=0;
         var list=this.AfterList
+        console.log(list)
         for (let i = 0; i <list.length ; i++) {
           if (list[i]["choose"]==="已选") {
             if (list[i]["tag"] === "血液科") {
@@ -349,11 +357,28 @@
               message: '选择成功！',
               type: 'success'
             })
-            this.AfterList=this.checked
+            this.$axios({
+              url: 'http://localhost:8096/getRelationship',
+              method: 'post',
+              data:{
+                PatientPhone:this.$session.get("phone")
+              }
+            }).then(res => {
+              this.AfterList = res.data
+              this.checked=[]
+              this.dialogVisible=false
+              this.$axios({
+                url: 'http://localhost:8096/getAllDoc',
+                method: 'get',
+              }).then(res => {
+                this.DocList = res.data
+              })
+            })
           }).catch(reason => {
             this.$message({
               showClose: true,
               message: '医师已经存在！',
+              // message:reason,
               type: 'error'
             })
           })
@@ -362,9 +387,37 @@
       editRelationship(row){
         this.editVisible=true
         this.editDoctorPhone=row["tel"]
+        this.$axios({
+          url:"http://localhost:8096/getPatientRelationship",
+          method:"post",
+          data:{
+            DoctorPhone:this.editDoctorPhone,
+            PatientPhone:this.$session.get("phone"),
+          }
+        }).then(res=>{
+          var list=[]
+          if (res.data[0]["blood"]){
+            list.push("血液科")
+          }
+          if (res.data[0]["tooth"]){
+            list.push("口腔科")
+          }
+          if (row["tag"]==="口腔科"){
+            this.ykList =list
+            this.checkList=this.ykList
+            this.chooseTag="口腔科"
+          }else if (row["tag"]==="血液科"){
+            this.xyList =list
+            this.checkList=this.xyList
+            this.chooseTag="血液科"
+          }
+          // console.log("checklist:",this.checkList)
+        })
+
 
       },
       choosePermission(){
+        // console.log("checklist2:",this.checkList)
         this.$axios({
           url:"http://localhost:8096/updateRelationship",
           method:"post",
@@ -379,6 +432,31 @@
             message: '选择成功！',
             type: 'success'
           })
+          this.$axios({
+            url:"http://localhost:8096/getPatientRelationship",
+            method:"post",
+            data:{
+              DoctorPhone:this.editDoctorPhone,
+              PatientPhone:this.$session.get("phone"),
+            }
+          }).then(res=>{
+            var list=[]
+            if (res.data[0]["blood"]){
+              list.push("血液科")
+            }
+            // console.log("list1:",list)
+            if (res.data[0]["tooth"]){
+              list.push("口腔科")
+            }
+            // console.log("list2:",list)
+            if (this.chooseTag==="口腔科"){
+              this.ykList =this.list
+            }else if (this.chooseTag==="血液科"){
+              this.xyList =this.list
+            }
+            this.editVisible=false
+          })
+
         })
       },
       delDoc:function (row) {

@@ -153,7 +153,7 @@
         <td width="100">性别</td>
         <td width="100">{{sex}}</td>
         <td width="100">体检日期</td>
-        <td width="100">2020/11/30</td>
+        <td width="100">{{examinationDate}}</td>
     </tr>
     <tr height="50"  style="text-align: center;">
       <td width="100">代号</td>
@@ -172,7 +172,7 @@
     <tr height="50"  style="text-align: center;">
       <td width="100">RBC</td>
       <td width="200" colspan="2">红细胞</td>
-      <td width="200" colspan="2">{{wbc}}</td>   <!-- 检测值 -->
+      <td width="200" colspan="2">{{rbc}}</td>   <!-- 检测值 -->
       <td width="100">3.5--5.5</td>
     </tr>
             <!-- 血小板 -->
@@ -203,8 +203,8 @@
         <td width="100">{{patientName}}</td>
         <td width="100">性别</td>
         <td width="100">{{sex}}</td>
+        <td width="100">体检日期</td>
         <td width="100">{{examinationDate}}</td>
-        <td width="100">2020/11/30</td>
     </tr>
     <tr height="50"  style="text-align: center;">
       <td width="50" td rowspan="4">口腔</td>
@@ -223,7 +223,7 @@
     </tr>
             <!-- 牙石 tartar -->
     <tr height="50"  style="text-align: center;">
-      <td width="150" colspan="2">项目</td> <!-- tartar -->
+      <td width="150" colspan="2">牙石</td> <!-- tartar -->
       <td width="200" colspan="3">{{tartar}}</td> <!-- 检测值 有无牙石 牙石数量从少到多由1-5表示 -->
     </tr>
 
@@ -244,7 +244,7 @@
     "松动度":"mobility",
     "牙石":"tartar",
   }
-  // const typesoptions2 = [{label:'叩痛',value:'pain'},{label:'松动度',value:'mobility"'},{label:'牙石',value:'tartar'}];
+
   export default {
     name: 'MyCase',
     data(){
@@ -304,7 +304,7 @@
         date2: '',
         min:'',
         max:'999',
-        value: [],//科室
+        value: "",//科室
         value1: [],//项目
         value2: '',//项目
         screen  :[],  //筛选
@@ -343,25 +343,35 @@
         }
       }).then(res=>{
         this.patientName=res.data["patientName"]
-        this.sex=res.data["sex"]
+        if (res.data["sex"]==="m"){
+          this.sex="男性"
+        }else if (res.data["sex"]==="f"){
+          this.sex="女性"
+        }
+
+
       })
     },
     methods: {
       beforeDialog(){  //点开查询
+        // console.log("typeof value",typeof this.value)
         this.value=""
         this.value1=[]
         this.value2=[]
         this.dialogVisible = true
       },
       selectChanged(){   //通过选择科室有不同的列表
-        // console.log(typeof   this.value)
+        // console.log("typeof value2",typeof   this.value)
         if (this.value==="口腔科"){
           this.types= typesoptions2
+          this.value1=[]
+          this.value2=[]
         }else if (this.value==="血液科"){
           this.types= typesoptions1
+          this.value1=[]
+          this.value2=[]
         }
-        // console.log(this.value)
-        // console.log(this.types)
+
       },
       selectProject(){
         var json = [];
@@ -374,19 +384,60 @@
         this.screen=json
       },
       screenSubmit(){
+        if (this.value2.length===0){
+          this.$message({
+            showClose: true,
+            message: '筛选条件不能为空！',
+            type: 'warning'
+          })
+          return
+        }
         var row={}
+
+        for (let i = 0; i < this.screenJson.length; i++) {
+          // console.log("-----------------")
+          // console.log("trans:",translation[this.value2])
+          if (this.screenJson[i]["values"]===translation[this.value2]){
+            row["down"]=this.min
+            row["up"]=this.max
+            this.$message({
+              showClose: true,
+              message: '更新成功！',
+              type: 'success'
+            })
+            return
+          }
+        }
+
         row["values"]=translation[this.value2]
         row["down"]=this.min
         row["up"]=this.max
         this.screenJson.push(row)
-        // this.screenJson[this.value2]=row
         this.$message({
           showClose: true,
           message: '筛选成功！',
           type: 'success'
         })
+        // console.log("this.screenJson[i]",this.screenJson[0]["values"])
+        // console.log("screenJson:",this.screenJson)
       },
       submit(){
+        if (this.screenJson.length===0){
+          this.$message({
+            showClose: true,
+            message: '筛选不能为空！',
+            type: 'warning'
+          })
+          return
+        }
+        if (this.date1===""||this.date2===""){
+          this.$message({
+            showClose: true,
+            message: '日期不能为空！',
+            type: 'warning'
+          })
+          return
+        }
         var tablename=this.value
         if (tablename==="口腔科"){
              tablename="tooth"
@@ -402,7 +453,7 @@
           data:{
             phone:this.$session.get("phone"),
               "tableName":tablename,
-              "patientId":this.$session.get("phone"),
+              // "patientId":this.$session.get("phone"),
               "startDate":this.date1,
               "endDate":this.date2,
               value:this.screenJson,
@@ -414,7 +465,9 @@
             type: 'success'
           })
           this.AllCase=res.data
-          console.log(this.AllCase)
+          this.screenJson=[]
+          // console.log(this.AllCase)
+          this.dialogVisible=false
         })
       },
       open() {
@@ -452,6 +505,7 @@
         this.currentPage=val
       },
       handleEdit(value,row){
+        console.log("this")
         console.log(row)
         if(row["office"]==="血液科"){
           this.BloodVisible=true
