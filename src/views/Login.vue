@@ -66,6 +66,30 @@ export default {
   },
   methods: {
     submit: function () {
+      if (this.username===""){
+        this.$message({
+          showClose: true,
+          message: '用户名不能为空！',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.password===""){
+        this.$message({
+          showClose: true,
+          message: '密码不能为空！',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.value===""){
+        this.$message({
+          showClose: true,
+          message: '请选择权限！',
+          type: 'warning'
+        })
+        return
+      }
       this.$axios({
         url: "http://localhost:8096/checkUser",
         method: "post",

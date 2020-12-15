@@ -269,28 +269,36 @@
       checkChoose(){
         var yk=0;
         var xy=0;
-        // console.log("AfterList:",this.AfterList)
         var list=this.AfterList.concat(this.checked)
-        // console.log("list:",list)
         for (let i = 0; i <list.length ; i++) {
-
             if (list[i]["tag"] === "血液科") {
               xy++
             } else if (list[i]["tag"] === "口腔科") {
               yk++
             }
-
         }
         console.log("xy:",xy,"yk:",yk)
+        return {
+          "xy":xy,
+          "yk":yk
+        }
         if (xy===1&&yk===1){
           return false
         }
-        return true;
+        return xy <= 1 && yk <= 1;
+
       },
       choose(row){
-        if (this.checkChoose()){
-          // console.log("check:",this.checkChoose())
-          if (!this.checked.includes(row)){
+        if (!this.checked.includes(row)){
+          var check=this.checkChoose()
+          var xy=check.xy
+          var yk =check.yk
+          if (row["tag"]==="血液科"){
+            xy++
+          }else if (row["tag"]==="口腔科"){
+            yk++
+          }
+          if (xy<2&&yk<2){
             row["choose"]="已选"
             this.checked.push(row)
             this.$message({
@@ -298,14 +306,16 @@
               message: '选择成功！',
               type: 'success'
             })
+          }else {
+            this.$message({
+              showClose: true,
+              message: '每个部门只能选择一个医生!',
+              type: 'warning'
+            })
           }
-        }else {
-          this.$message({
-            showClose: true,
-            message: '每个部门只能选择一个医生!',
-            type: 'warning'
-          })
+
         }
+
 
       },
       cancel(row){

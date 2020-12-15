@@ -10,7 +10,7 @@
       <span>
         <template>
           <span class="demonstration">科室：</span>
-          <el-select v-model="value" placeholder="选择科室" @change="selectChanged">
+          <el-select v-model="value0" placeholder="选择科室" @change="selectChanged">
             <el-option
                     v-for="item in offices"
                     :key="item.value"
@@ -41,16 +41,18 @@
           </el-select>
           <br><br>
           <span class="demonstration">筛选区间</span>
-          <el-input-number size="mini" v-model="min" @change="handleChange" :min="0" :max="999" label="最小值"></el-input-number>
+          <el-input-number size="mini" v-model="min" @change="handleChange" :min="0" :max="999"
+                           label="最小值"></el-input-number>
           <span class="demonstration">至</span>
-          <el-input-number size="mini" v-model="max" @change="handleChange" :min="0" :max="999" label="最大值" value="999"></el-input-number>
+          <el-input-number size="mini" v-model="max" @change="handleChange" :min="0" :max="999" label="最大值"
+                           value="999"></el-input-number>
             <span class="demonstration"></span>
           <el-button type="primary" @click="screenSubmit" size="mini">提交筛选</el-button>
         </template>
         <br><br>
         <template>
           <div class="block">
-            <span class="demonstration" >时间区间</span>
+            <span class="demonstration">时间区间</span>
             <el-date-picker
                     size="mini"
                     v-model="date1"
@@ -72,14 +74,46 @@
           </div>
         </template>
         <br>
-        <el-col :span="4" :offset="18"><el-button @click="submit"  type="primary">提交</el-button></el-col>
+        <el-col :span="4" :offset="18"><el-button @click="submit" type="primary">提交</el-button></el-col>
         <br><br>
 
       </span>
             </el-dialog>
 
+            <el-dialog title="根据体检单绘制图表" :visible.sync="dialogFormVisible"
+                       width="27%"
+                       height="400px">
+                <el-form :model="form">
+                    <el-form-item label="绘制图表类型" >
+                        <el-select v-model="form.type" placeholder="请选图表类型">
+                            <el-option label="折线图" value="折线图"></el-option>
+                            <el-option label="柱状图" value="柱状图"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="showChart">确 定</el-button>
+                </div>
+            </el-dialog>
+
+            <el-dialog title="图表" :visible.sync="isShowLine"
+                       width="80%"
+                       height="600px"
+                       :before-close="handleCloseChart">
+                <ve-line :data="chartData" :settings="chartSettings" ></ve-line>
+            </el-dialog>
+
+            <el-dialog title="图表" :visible.sync="isShowHistogram"
+                       width="80%"
+                       height="600px"
+                       :before-close="handleCloseChart">
+                <ve-histogram :data="chartData" :settings="chartSettings" ></ve-histogram>
+            </el-dialog>
+
             <!-- 主界面 -->
-            <el-button @click="beforeDialog">查询病历</el-button>
+            <el-button @click="beforeDialog">查询体检单</el-button>
+            <el-button type="primary" @click="GeneratingCharts">生成图表</el-button>
             <el-table
                     :data="PageData"
                     style="width: 100%"
@@ -100,7 +134,8 @@
                     <template slot-scope="scope">
                         <el-tag
                                 :type="scope.row.office === 'tooth' ? 'primary' : 'success'"
-                                disable-transitions>{{scope.row.office}}</el-tag>
+                                disable-transitions>{{scope.row.office}}
+                        </el-tag>
                     </template>
                 </el-table-column>
 
@@ -118,7 +153,8 @@
                     <template slot-scope="scope">
                         <el-button
                                 size="mini"
-                                @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                                @click="handleEdit(scope.$index, scope.row)">查看
+                        </el-button>
                     </template>
                 </el-table-column>
 
@@ -136,7 +172,7 @@
                 :total="CaseData.length">
         </el-pagination>
 
-<!--        血液科体检报告单-->
+        <!--        血液科体检报告单-->
         <el-dialog
                 :visible.sync="BloodVisible"
                 width="60%"
@@ -147,7 +183,7 @@
                cellspacing="0px"
                style="margin:auto;"
                width="800px">
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
         <td width="100">姓名</td>
         <td width="100">{{patientName}}</td>
         <td width="100">性别</td>
@@ -155,28 +191,28 @@
         <td width="100">体检日期</td>
         <td width="100">{{examinationDate}}</td>
     </tr>
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="100">代号</td>
       <td width="200" colspan="2">项目</td>
       <td width="200" colspan="2">结果</td>
       <td width="100">参考值</td>
     </tr>
             <!-- 白细胞 -->
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="100">WBC</td>
       <td width="200" colspan="2">白细胞</td>
       <td width="200" colspan="2">{{wbc}}</td>   <!-- 检测值 -->
       <td width="100">4--10 10^9/L</td>
     </tr>
             <!-- 红细胞 -->
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="100">RBC</td>
       <td width="200" colspan="2">红细胞</td>
       <td width="200" colspan="2">{{rbc}}</td>   <!-- 检测值 -->
       <td width="100">3.5--5.5</td>
     </tr>
             <!-- 血小板 -->
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="100">PLT</td>
       <td width="200" colspan="2">血小板</td>
       <td width="200" colspan="2">{{plt}}</td>   <!-- 检测值 -->
@@ -187,7 +223,7 @@
         </el-dialog>
         <!--        血液科体检报告单-->
 
-<!--口腔科体检报告单-->
+        <!--口腔科体检报告单-->
         <el-dialog
                 :visible.sync="ToothVisible"
                 width="60%"
@@ -198,7 +234,7 @@
                cellspacing="0px"
                style="margin:auto;"
                width="800px">
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
         <td width="100">姓名</td>
         <td width="100">{{patientName}}</td>
         <td width="100">性别</td>
@@ -206,62 +242,81 @@
         <td width="100">体检日期</td>
         <td width="100">{{examinationDate}}</td>
     </tr>
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="50" td rowspan="4">口腔</td>
       <td width="150" colspan="2">项目</td>
       <td width="200" colspan="3">结果</td>
     </tr>
             <!-- 叩痛 pain -->
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="150" colspan="2">叩痛</td> <!-- pain -->
       <td width="200" colspan="3">{{pain}}</td> <!-- 检测值 由轻到重五个等级1-5 -->
     </tr>
             <!-- 松动度 mobility -->
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="150" colspan="2">松动度</td>  <!-- mobility -->
       <td width="200" colspan="3">{{mobility}}</td>  <!-- 检测值 不松动-严重由1-3表示 -->
     </tr>
             <!-- 牙石 tartar -->
-    <tr height="50"  style="text-align: center;">
+    <tr height="50" style="text-align: center;">
       <td width="150" colspan="2">牙石</td> <!-- tartar -->
       <td width="200" colspan="3">{{tartar}}</td> <!-- 检测值 有无牙石 牙石数量从少到多由1-5表示 -->
     </tr>
 
 </table></span>
         </el-dialog>
-<!--口腔科体检报告单-->
+        <!--口腔科体检报告单-->
     </div>
 </template>
 
 <script>
-  const typesoptions1 = [{label:'红细胞',value:'红细胞'},{label:'白细胞',value:'白细胞'},{label:'血小板',value:'血小板'}];
-  const typesoptions2 = [{label:'叩痛',value:'叩痛'},{label:'松动度',value:'松动度'},{label:'牙石',value:'牙石'}];
-  const translation ={
-    "红细胞":"rbc",
-    "白细胞":"wbc",
-    "血小板":"plt",
-    "叩痛":"pain",
-    "松动度":"mobility",
-    "牙石":"tartar",
+  const typesoptions1 = [{
+    label: '红细胞',
+    value: '红细胞'
+  }, {
+    label: '白细胞',
+    value: '白细胞'
+  }, {
+    label: '血小板',
+    value: '血小板'
+  }]
+  const typesoptions2 = [{
+    label: '叩痛',
+    value: '叩痛'
+  }, {
+    label: '松动度',
+    value: '松动度'
+  }, {
+    label: '牙石',
+    value: '牙石'
+  }]
+  const translation = {
+    '红细胞': 'rbc',
+    '白细胞': 'wbc',
+    '血小板': 'plt',
+    '叩痛': 'pain',
+    '松动度': 'mobility',
+    '牙石': 'tartar',
   }
 
   export default {
     name: 'MyCase',
-    data(){
+    data () {
+
       return {
         //病人信息
-        patientName:"",
-        sex:"",
-        examinationDate:"",
-        examinationNo:"",
+        patientName: '',
+        sex: '',
+        examinationDate: '',
+        examinationNo: '',
         //血液科数据
-        plt:"",  //血小板
-        rbc:"", //红细胞
-        wbc:"",  //白细胞
+        plt: '',  //血小板
+        rbc: '', //红细胞
+        wbc: '',  //白细胞
         //口腔科数据
-        pain:"", //叩痛
-        mobility:"",  //松动度
-        tartar:"",    //牙石
+        pain: '', //叩痛
+        mobility: '',  //松动度
+        tartar: '',    //牙石
 
         offices: [{
           value: '口腔科',
@@ -271,120 +326,146 @@
           label: '血液科'
         }],
         pickerOptions: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
+          disabledDate (time) {
+            return time.getTime() > Date.now()
           },
           shortcuts: [{
             text: '今天',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
+            onClick (picker) {
+              picker.$emit('pick', new Date())
             }
           }, {
             text: '昨天',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24)
+              picker.$emit('pick', date)
             }
           }, {
             text: '一周前',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', date)
             }
           }]
         },
-        AllCase:[],//筛选后的病例
-        currentPage:1,//默认开始页面
-        pagesize:9,
-        filters:[{ text: '血液科', value: 'blood' }, { text: '口腔科', value: 'tooth' }],
-        filter:"",
+        AllCase: [],//筛选后的病例
+        currentPage: 1,//默认开始页面
+        pagesize: 9,
+        filters: [{
+          text: '血液科',
+          value: 'blood'
+        }, {
+          text: '口腔科',
+          value: 'tooth'
+        }],
+        filter: '',
         date1: '',
         date2: '',
-        min:'',
-        max:'999',
-        value: "",//科室
+        min: '',
+        max: '999',
+        value0: '',//科室
         value1: [],//项目
         value2: '',//项目
-        screen  :[],  //筛选
-        screenJson:[],
-        types:"",  //选择对应科室的相关项目，对应复选框内的选项
+        screen: [],  //筛选
+        screenJson: [],
+        types: [],  //选择对应科室的相关项目，对应复选框内的选项
         dialogVisible: false,
-        BloodVisible:false,
-        ToothVisible:false,
+        BloodVisible: false,
+        ToothVisible: false,
+        dialogFormVisible: false,   //图表
+        ChartVisible: false,
+        chartData:{       //数据
+          columns: ['date'],
+          rows:[]
+        },
+        chartSettings : {
+          labelMap: {
+            'date':"体检日期",
+            'pain': '叩痛',
+            'mobility': '松动度',
+            'tartar':"牙石",
+            'rbc': '红细胞',
+            'wbc': '白细胞',
+            'plt': '血小板',
+          },
+        },
+        isShowHistogram:false,
+        isShowLine:false,
+        form: {
+          type: ''
+        },
       }
     },
-    computed:{
-        CaseData:function (){
+    computed: {
+      CaseData: function () {
         return this.AllCase.filter(item => {
-          if (this.filter.length===1) {
-            if (item["tag"]!==this.filter[0]) {
+          if (this.filter.length === 1) {
+            if (item['tag'] !== this.filter[0]) {
               return false
             }
           }
           return true
         })
       },
-      PageData:function (){
-          if (this.AllCase.length===0)
-          {
-            return []
-          }
+      PageData: function () {
+        if (this.AllCase.length === 0) {
+          return []
+        }
         return this.CaseData.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
       }
     },
     mounted () {
       this.$axios({
-        url:"http://localhost:8096/getPatientDetail",
-        method: "post",
-        data:{
-          phone:this.$session.get("phone")
+        url: 'http://localhost:8096/getPatientDetail',
+        method: 'post',
+        data: {
+          phone: this.$session.get('phone')
         }
-      }).then(res=>{
-        this.patientName=res.data["patientName"]
-        if (res.data["sex"]==="m"){
-          this.sex="男性"
-        }else if (res.data["sex"]==="f"){
-          this.sex="女性"
+      }).then(res => {
+        this.patientName = res.data['patientName']
+        if (res.data['sex'] === 'm') {
+          this.sex = '男性'
+        } else if (res.data['sex'] === 'f') {
+          this.sex = '女性'
         }
-
 
       })
     },
     methods: {
-      beforeDialog(){  //点开查询
+      beforeDialog () {  //点开查询
         // console.log("typeof value",typeof this.value)
-        this.value=""
-        this.value1=[]
-        this.value2=[]
+        this.value0 = ''
+        this.value1 = []
+        this.value2 = []
+        this.screen = []
         this.dialogVisible = true
       },
-      selectChanged(){   //通过选择科室有不同的列表
-        // console.log("typeof value2",typeof   this.value)
-        if (this.value==="口腔科"){
-          this.types= typesoptions2
-          this.value1=[]
-          this.value2=[]
-        }else if (this.value==="血液科"){
-          this.types= typesoptions1
-          this.value1=[]
-          this.value2=[]
+      selectChanged () {   //通过选择科室有不同的列表
+        if (this.value0 === '口腔科') {
+          this.types = typesoptions2
+          this.value1 = []
+          this.value2 = []
+        } else if (this.value0 === '血液科') {
+          this.types = typesoptions1
+          this.value1 = []
+          this.value2 = []
         }
 
       },
-      selectProject(){
-        var json = [];
-        for (let i = 0; i <this.value1.length ; i++) {
-          var row = {};
-          row.label= this.value1[i];
-          row.value =  this.value1[i];
+      selectProject () {
+        var json = []
+        for (let i = 0; i < this.value1.length; i++) {
+          var row = {}
+          row.label = this.value1[i]
+          row.value = this.value1[i]
           json.push(row)
         }
-        this.screen=json
+        this.screen = json
       },
-      screenSubmit(){
-        if (this.value2.length===0){
+      screenSubmit () {
+        if (this.value2.length === 0) {
           this.$message({
             showClose: true,
             message: '筛选条件不能为空！',
@@ -392,14 +473,14 @@
           })
           return
         }
-        var row={}
+        var row = {}
 
         for (let i = 0; i < this.screenJson.length; i++) {
           // console.log("-----------------")
           // console.log("trans:",translation[this.value2])
-          if (this.screenJson[i]["values"]===translation[this.value2]){
-            row["down"]=this.min
-            row["up"]=this.max
+          if (this.screenJson[i]['values'] === translation[this.value2]) {
+            row['down'] = this.min
+            row['up'] = this.max
             this.$message({
               showClose: true,
               message: '更新成功！',
@@ -409,9 +490,9 @@
           }
         }
 
-        row["values"]=translation[this.value2]
-        row["down"]=this.min
-        row["up"]=this.max
+        row['values'] = translation[this.value2]
+        row['down'] = this.min
+        row['up'] = this.max
         this.screenJson.push(row)
         this.$message({
           showClose: true,
@@ -421,8 +502,8 @@
         // console.log("this.screenJson[i]",this.screenJson[0]["values"])
         // console.log("screenJson:",this.screenJson)
       },
-      submit(){
-        if (this.screenJson.length===0){
+      submit () {
+        if (this.screenJson.length === 0) {
           this.$message({
             showClose: true,
             message: '筛选不能为空！',
@@ -430,7 +511,7 @@
           })
           return
         }
-        if (this.date1===""||this.date2===""){
+        if (this.date1 === '' || this.date2 === '') {
           this.$message({
             showClose: true,
             message: '日期不能为空！',
@@ -438,39 +519,46 @@
           })
           return
         }
-        var tablename=this.value
-        if (tablename==="口腔科"){
-             tablename="tooth"
-        }else if (tablename==="血液科"){
-          tablename="blood"
+        var tablename = this.value
+        if (tablename === '口腔科') {
+          tablename = 'tooth'
+        } else if (tablename === '血液科') {
+          tablename = 'blood'
         }
         this.$axios({
-          url:"http://localhost:8096/selectPatientCase",
-          method:"post",
-          headers:{
-            "Content-Type":'application/json; charset=UTF-8'
+          url: 'http://localhost:8096/selectPatientCase',
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
           },
-          data:{
-            phone:this.$session.get("phone"),
-              "tableName":tablename,
-              // "patientId":this.$session.get("phone"),
-              "startDate":this.date1,
-              "endDate":this.date2,
-              value:this.screenJson,
+          data: {
+            phone: this.$session.get('phone'),
+            'tableName': tablename,
+            // "patientId":this.$session.get("phone"),
+            'startDate': this.date1,
+            'endDate': this.date2,
+            value: this.screenJson,
           }
-        }).then(res=>{
+        }).then(res => {
           this.$message({
             showClose: true,
             message: '提交成功！',
             type: 'success'
           })
-          this.AllCase=res.data
-          this.screenJson=[]
+          this.chartData["columns"]=['date']
+          for (let lengthKey in this.screenJson) {
+            if (this.screenJson.hasOwnProperty(lengthKey)){
+              this.chartData["columns"].push(this.screenJson[lengthKey]['values'])
+            }
+
+          }
+          this.AllCase = res.data
+          this.screenJson = []
           // console.log(this.AllCase)
-          this.dialogVisible=false
+          this.dialogVisible = false
         })
       },
-      open() {
+      open () {
         this.$confirm('此操作将永久删除该条目, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -479,50 +567,99 @@
           this.$message({
             type: 'success',
             message: '删除成功!'
-          });
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });
-        });
+          })
+        })
       },
-      handleClose(done) {
+      handleClose (done) {
         this.$confirm('确认关闭？')
           .then(_ => {
-            done();
+            done()
           })
-          .catch(_ => {});
+          .catch(_ => {
+          })
       },
-      handleChange(value) {
-        console.log(value);
+      handleChange (value) {
+        console.log(value)
       },
-      handleSizeChange(val) {
+      handleSizeChange (val) {
         this.currentPage = 1
-        this.pagesize=val
+        this.pagesize = val
       },
-      handleCurrentChange(val) {
-        this.currentPage=val
+      handleCurrentChange (val) {
+        this.currentPage = val
       },
-      handleEdit(value,row){
-        console.log("this")
+      handleEdit (value, row) {
+        console.log('this')
         console.log(row)
-        if(row["office"]==="血液科"){
-          this.BloodVisible=true
-          this.examinationDate=row["date"]
-          this.plt=row["plt"]
-          this.wbc=row["wbc"]
-          this.rbc=row["rbc"]
-          this.examinationNo=row["tableId"]
-        }else {
-          this.ToothVisible=true
-          this.examinationDate=row["date"]
-          this.pain=row["pain"]
-          this.tartar=row["tartar"]
-          this.mobility=row["mobility"]
-          this.examinationNo=row["tableId"]
+        if (row['office'] === '血液科') {
+          this.BloodVisible = true
+          this.examinationDate = row['date']
+          this.plt = row['plt']
+          this.wbc = row['wbc']
+          this.rbc = row['rbc']
+          this.examinationNo = row['tableId']
+        } else {
+          this.ToothVisible = true
+          this.examinationDate = row['date']
+          this.pain = row['pain']
+          this.tartar = row['tartar']
+          this.mobility = row['mobility']
+          this.examinationNo = row['tableId']
         }
-      }
+      },
+      GeneratingCharts () {
+        if (this.AllCase.length === 0) {
+          this.$message({
+            showClose: true,
+            message: '暂无数据！',
+            type: 'warning'
+          })
+            return
+        }
+        this.dialogFormVisible = true
+      },
+      showChart(){
+        if (this.form['type'].length===0){
+          this.$message({
+            showClose: true,
+            message: '请选择图表类型！',
+            type: 'warning'
+          })
+          return
+        }
+        this.chartData["rows"]=this.AllCase
+        if (this.form['type']==="柱状图"){
+          this.isShowHistogram=true
+        }else{
+          this.isShowLine=true
+        }
+        // console.log(this.form)
+        // console.log("显示柱状:",this.isShowHistogram)
+        // console.log("显示折线:",this.isShowLine)
+
+        // this.ChartVisible=true
+      },
+      handleCloseChart (done) {
+        // console.log(this.chartData)
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            // this.dialogFormVisible=false
+            done()
+            if (this.isShowHistogram===true){
+              this.isShowHistogram=false
+            }
+            else if (this.isShowLine===true){
+              this.isShowLine=false
+            }
+          })
+          .catch(_ => {
+          })
+      },
     }
   }
 </script>
