@@ -121,11 +121,18 @@
                 <el-table-column
                         prop="action"
                         label="操作"
-                        width="200">
+                        width="300">
                     <template slot-scope="scope">
                         <el-button
                                 size="small"
-                                @click="LookPatient(scope.row)">查看</el-button>
+                                plain
+                                type="primary"
+                                @click="LookPatient(scope.row)">查看体检单</el-button>
+                        <el-button
+                                size="small"
+                                plain
+                                type="success"
+                                >生成图表</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -321,9 +328,13 @@
       this.$axios({
         url:"http://localhost:8096/getDocsPatient",
         method:"post",
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
         data:{
           DoctorPhone:this.$session.get("phone")
-        }
+        },
+        // headers: {'content-type': 'application/x-www-form-urlencoded'}
       }).then(res=>{
         // console.log(res.data)
         this.patientList=res.data

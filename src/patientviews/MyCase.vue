@@ -365,6 +365,7 @@
         date2: '',
         min: '',
         max: '999',
+        tablename:"",
         value0: '',//科室
         value1: [],//项目
         value2: '',//项目
@@ -519,11 +520,11 @@
           })
           return
         }
-        var tablename = this.value
-        if (tablename === '口腔科') {
-          tablename = 'tooth'
-        } else if (tablename === '血液科') {
-          tablename = 'blood'
+        const name = this.value0
+        if (name === '口腔科') {
+          this.tablename = 'tooth'
+        } else if (name === '血液科') {
+          this.tablename = 'blood'
         }
         this.$axios({
           url: 'http://localhost:8096/selectPatientCase',
@@ -533,10 +534,9 @@
           },
           data: {
             phone: this.$session.get('phone'),
-            'tableName': tablename,
-            // "patientId":this.$session.get("phone"),
             'startDate': this.date1,
             'endDate': this.date2,
+            tableName: this.tablename,
             value: this.screenJson,
           }
         }).then(res => {
