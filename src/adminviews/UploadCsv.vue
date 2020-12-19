@@ -1,22 +1,18 @@
 <template>
     <div id="UploadCsv">
-<!--        <el-upload-->
-<!--                class="upload-demo"-->
-<!--                action="http://localhost:8096/getDocsPatientsRecord/uploadFile"-->
-<!--                accept=".csv"-->
-<!--                :on-preview="handlePreview"-->
-<!--                :on-remove="handleRemove"-->
-<!--                :before-remove="beforeRemove"-->
-<!--                multiple-->
-<!--                :limit="10"-->
-<!--                :on-exceed="handleExceed"-->
-<!--                :file-list="fileList">-->
-<!--            <el-button size="small" type="primary" @click="openCsvDialog">点击上传</el-button>-->
-<!--        </el-upload>-->
-        <div id="nav">
-            <button @click="cmd">测试</button>
-            <br/>
-        </div>
+        <el-upload
+                class="upload-demo"
+                action="http://localhost:8096/uploadFile"
+                accept=".csv"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                multiple
+                :limit="10"
+                :on-exceed="handleExceed"
+                :file-list="fileList">
+            <el-button size="small" type="primary" >点击上传</el-button>
+        </el-upload>
     </div>
 </template>
 
@@ -30,9 +26,6 @@
       };
     },
     methods: {
-      cmd(){
-
-      },
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },

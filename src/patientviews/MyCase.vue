@@ -545,12 +545,14 @@
             message: '提交成功！',
             type: 'success'
           })
-          this.chartData["columns"]=['date']
-          for (let lengthKey in this.screenJson) {
-            if (this.screenJson.hasOwnProperty(lengthKey)){
-              this.chartData["columns"].push(this.screenJson[lengthKey]['values'])
-            }
-
+          if (this.tablename==="tooth"){
+            this.chartData["columns"].push("pain")
+            this.chartData["columns"].push("tartar")
+            this.chartData["columns"].push("mobility")
+          }else {
+            this.chartData["columns"].push("wbc")
+            this.chartData["columns"].push("rbc")
+            this.chartData["columns"].push("plt")
           }
           this.AllCase = res.data
           this.screenJson = []
@@ -638,11 +640,7 @@
         }else{
           this.isShowLine=true
         }
-        // console.log(this.form)
-        // console.log("显示柱状:",this.isShowHistogram)
-        // console.log("显示折线:",this.isShowLine)
-
-        // this.ChartVisible=true
+        // console.log(this.chartData)
       },
       handleCloseChart (done) {
         // console.log(this.chartData)
