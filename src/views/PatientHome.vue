@@ -8,7 +8,7 @@
               <template slot="title"><i class="el-icon-menu"></i>智慧医疗-病患</template>
               <router-link to="MyCase"><el-menu-item index="3-1">数据查询</el-menu-item></router-link>
               <router-link to="MyDoctor"> <el-menu-item index="3-2">我的医师</el-menu-item></router-link>
-              <el-menu-item index="3-3">报告查询</el-menu-item>
+              <router-link to="MyAppointment"><el-menu-item index="3-3">我的预约</el-menu-item></router-link>
               <router-link to="MyData"><el-menu-item index="3-4">个人资料</el-menu-item></router-link>
             </el-submenu>
           </el-menu>

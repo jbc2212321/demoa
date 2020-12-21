@@ -15,7 +15,8 @@ import DoctorData from '../doctorviews/DoctorData'
 import DoctorHome from '../views/DoctorHome'
 import MyPatient from '../doctorviews/MyPatient'
 import UploadCsv from '../adminviews/UploadCsv'
-
+import MyAppointment from '../patientviews/MyAppointment'
+import DoctorAppointment from '../doctorviews/DoctorAppointment'
 Vue.use(VueRouter)
 
 const routes = [
@@ -23,12 +24,6 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
-    // children:[
-    //   {
-    //     path:"/admin/UserManagement",
-    //     component:UserManagement
-    //   }
-    // ],
     meta: { // 加一个自定义obj
       requireAuth: true // 这个参数 true 代表需要登录才能进入A
     }
@@ -134,9 +129,34 @@ const routes = [
           requireAuth: true,
           identity:2
         },
+      },
+      {
+        path:"/patient/MyAppointment",
+        component:MyAppointment,
+        meta: {
+          requireAuth: true,
+          identity:2
+        },
       }
     ],
     beforeEnter: (to, from, next) => {
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/patient/MyAppointment',
+    name: 'MyAppointment',
+    component: MyAppointment,
+    meta: {
+      requireAuth: true,
+      identity:2
+    },
+    beforeEnter:(to,from,next)=>{
       if (to.meta.identity!==store.state.identity){
         alert("用户身份不匹配!")
         next({ path: '/' })
@@ -202,6 +222,15 @@ const routes = [
     component: DoctorHome,
     children: [
       {
+        path: '/doctor/DoctorAppointment',
+        name: 'DoctorAppointment',
+        component:DoctorAppointment ,
+        meta: {
+          requireAuth: true,
+          identity: 3
+        }
+      },
+      {
         path: '/doctor/DoctorData',
         name: 'DoctorData',
         component:DoctorData ,
@@ -223,6 +252,24 @@ const routes = [
     meta: {
       requireAuth: true,
       identity:3
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        console.log("???")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/doctor/DoctorAppointment',
+    name: 'DoctorAppointment',
+    component:DoctorAppointment ,
+    meta: {
+      requireAuth: true,
+      identity: 3
     },
     beforeEnter: (to, from, next) => {
       if (to.meta.identity!==store.state.identity){

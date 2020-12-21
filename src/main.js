@@ -11,9 +11,9 @@ import VueSession from 'vue-session'
 import qs from 'qs'
 
 Vue.prototype.$axios = Axios
-Axios.defaults.baseURL = '/api'
+Axios.defaults.baseURL = 'http://localhost:3000/api'
 Axios.defaults.headers.post['Content-Type'] = 'application/json';
-
+// axios.defaults.baseURL = 'http://localhost:3000';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI).use(Select).use(Button).use(VueCookies).use(VCharts).use(Axios).use(VueSession).use(qs)

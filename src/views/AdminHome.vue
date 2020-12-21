@@ -69,7 +69,7 @@
 
 
           <el-col :span="4">
-            <el-row gutter="15">
+            <el-row :gutter="15">
               <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
                 <el-radio-button :label="false">展开</el-radio-button>
                 <el-radio-button :label="true">收起</el-radio-button>
@@ -78,14 +78,14 @@
           </el-col>
 
           <el-col :span="5" :offset="15">
-            <el-row gutter="15">
+            <el-row :gutter="15">
               <el-col :span="5">
                 <el-dropdown>
                 <span class="el-dropdown-link">
                   用户名123<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>登出</el-dropdown-item>
+                    <el-dropdown-item ><el-button @click="outLogin">登出</el-button></el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </el-col>
@@ -114,6 +114,12 @@ export default {
     }
   },
   methods: {
+    outLogin(){
+      this.$session.remove("phone")
+      this.$router.push({
+        path: '/'
+      })
+    },
     handleOpen111(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -166,7 +172,7 @@ export default {
 
   .el-dropdown-link {
     cursor: pointer;
-    color: #409EFF;
+    color: #439bf3;
   }
   .el-icon-arrow-down {
     font-size: 12px;
