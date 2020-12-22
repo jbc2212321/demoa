@@ -63,6 +63,7 @@
     data () {
       return {
         AllAccount: [],
+        checkTime: '',
         trans: {
           0: '待通过',
           1: '已通过',
@@ -85,54 +86,75 @@
       })
     },
     methods: {
+      checkAppointment (row) {
+        const date = row['time'].split(' ')[0]
+        const btime = row['time'].split(' ')[1].split('-')[0]
+        const etime = row['time'].split(' ')[1].split('-')[1]
+        this.$axios({
+          url: 'http://localhost:8096/checkDocsAppointment',
+          method: 'post',
+          data: {
+            appointmentNo: row['num'],
+            doctorPhone: this.$session.get('phone'),
+            date1: date + ' ' + btime,
+            date2: date + ' ' + etime,
+          }
+        }).then(res => {
+          this.checkTime = res.data
+        })
+
+      },
       async agree (row) {
-        // console.log(row['choose'])
-        switch (row['choose']) {
-          case 0:
-            await this.$axios({
-              url: 'http://localhost:8096/setDocsAppointment',
-              method: 'post',
-              data: {
-                num: row['num'],
-                state: 1
-              }
-            }).then(res => {
+        const date = row['time'].split(' ')[0]
+        const btime = row['time'].split(' ')[1].split('-')[0]
+        const etime = row['time'].split(' ')[1].split('-')[1]
+        if (row['choose'] === 0 || row['choose'] === 2) {
+          this.$axios({
+            url: 'http://localhost:8096/checkDocsAppointment',
+            method: 'post',
+            data: {
+              appointmentNo: row['num'],
+              doctorPhone: this.$session.get('phone'),
+              date1: date + ' ' + btime,
+              date2: date + ' ' + etime,
+            }
+          }).then(async res => {
+            if (res.data === false) {
               this.$message({
                 showClose: true,
-                message: '选择成功！',
-                type: 'success'
+                message: '预约时间冲突！',
+                type: 'warning'
               })
-              row['choose'] = 1
-            })
-            break
-          case 1:
-            this.$message({
-              showClose: true,
-              message: '您已经同意过了！',
-              type: 'warning'
-            })
-            break
-          case 2:
-            await this.$axios({
-              url: 'http://localhost:8096/setDocsAppointment',
-              method: 'post',
-              data: {
-                num: row['num'],
-                state: 1
-              }
-            }).then(res => {
-              this.$message({
-                showClose: true,
-                message: '选择成功！',
-                type: 'success'
+              return false
+            } else {
+              await this.$axios({
+                url: 'http://localhost:8096/setDocsAppointment',
+                method: 'post',
+                data: {
+                  num: row['num'],
+                  state: 1
+                }
+              }).then(res => {
+                this.$message({
+                  showClose: true,
+                  message: '选择成功！',
+                  type: 'success'
+                })
+                row['choose'] = 1
               })
-              row['choose'] = 1
-            })
-            break
-          default:
-            break
+              return false
+            }
+          })
         }
 
+        if (row['choose'] === 1) {
+          this.$message({
+            showClose: true,
+            message: '您已经同意过了！',
+            type: 'warning'
+          })
+
+        }
       },
       refuse (row) {
         this.$confirm('请确认操作', '提示', {

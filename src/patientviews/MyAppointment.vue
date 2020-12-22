@@ -51,7 +51,9 @@
           </template>
       </span>
             <span slot="footer" class="dialog-footer">
+<!--                <template slot-scope="scope">-->
           <el-button @click="submitAppointment" type="primary">提交预约</el-button>
+<!--                    </template>-->
           </span>
         </el-dialog>
 
@@ -82,8 +84,8 @@
                     width="180">
                 <template slot-scope="scope">
                     <el-tag
-                            :type="scope.row.tag === '口腔科' ? 'primary' : 'success'"
-                            disable-transitions>{{scope.row.tag}}
+                            :type="scope.row.tag === 1 ? 'primary' : 'success'"
+                            disable-transitions>{{transTag[scope.row.tag]}}
                     </el-tag>
                 </template>
             </el-table-column>
@@ -105,8 +107,8 @@
                     width="180">
                 <template slot-scope="scope">
                     <el-tag
-                            :type="scope.row.choose === '待通过' ? 'info' : scope.row.choose === '已通过' ? 'success':'danger'"
-                            disable-transitions>{{scope.row.choose}}
+                            :type="scope.row.choose ===0 ? 'info' : scope.row.choose === 1 ? 'success':'danger'"
+                            disable-transitions>{{transState[scope.row.choose]}}
                     </el-tag>
                 </template>
             </el-table-column>
@@ -115,7 +117,9 @@
                     prop="tag"
                     label="操作"
                     width="200">
-                <el-button size="small" type="danger" @click="open">取消预约</el-button>
+                <template slot-scope="scope">
+                <el-button size="small" type="danger" @click="refuse(scope.row)">取消预约</el-button>
+                    </template>
             </el-table-column>
 
         </el-table>
@@ -128,35 +132,16 @@
     name: 'MyAppointment',
     data () {
       return {
-        tableData: [{
-          num: '1',
-          name: '123',
-          tel: '1145141919',
-          tag: '口腔科',
-          time: '2020/12/30 12:00-18:00',
-          choose: '待通过'
-        }, {
-          num: '2',
-          name: '234',
-          tel: '123123123121',
-          tag: '血液科',
-          time: '2020/12/30 12:00-18:00',
-          choose: '已通过'
-        }, {
-          num: '3',
-          name: '345',
-          tel: '123123123121',
-          tag: '血液科',
-          time: '2020/12/30 12:00-18:00',
-          choose: '不通过'
-        }, {
-          num: '4',
-          name: '456',
-          tel: '123123123121',
-          tag: '口腔科',
-          time: '2020/12/30 12:00-18:00',
-          choose: '不通过'
-        }],
+        transState: {
+          0: '待通过',
+          1: '已通过',
+          2: '不通过',
+        },
+        transTag:{
+          1:"血液科",
+          2:"口腔科"
+        },
+        tableData: [],
         offices: [],
         pickerOptions: {
           // disabledDate是一个函数,参数是当前选中的日期值,这个函数需要返回一个Boolean值,
@@ -190,6 +175,16 @@
           this.offices.push(dict)
         }
       })
+
+      this.$axios({
+        url:"http://localhost:8096/getPatientsAppointment",
+        method:"post",
+        data:{
+          patientPhone:this.$session.get("phone")
+        }
+      }).then(res=>{
+        this.tableData=res.data
+      })
     },
     methods: {
       dealDisabledDate (time) {
@@ -208,53 +203,114 @@
         this.endTime=""
         this.dialogVisible=true
       },
+
       submitAppointment(){
+        if (this.doctorPhone===""){
+          this.$message({
+            showClose: true,
+            message: '请选择医师！',
+            type: 'warning'
+          })
+          return
+        }
+        if (this.date1===""||this.startTime===""||this.endTime===""){
+          this.$message({
+            showClose: true,
+            message: '日期或时间不能为空！',
+            type: 'warning'
+          })
+          return
+        }
         if (Number(this.endTime.split(":")[0])<=Number(this.startTime.split(":")[0])){
           this.$message({
             showClose: true,
-            message: '日期错误！',
+            message: '时间错误！',
             type: 'warning'
           })
           this.endTime=""
           return
         }
-        // console.log(typeof  this.date1)
-        // console.log(this.date1+this.startTime)
+
         this.$axios({
-          url:"http://localhost:8096/insertPatientAppointment",
+          url:"http://localhost:8096/getPatientsAppointmentSingle",
           method: "post",
           data:{
             doctorPhone:this.doctorPhone,
             patientPhone: this.$session.get("phone"),
-            date:this.date1,
-            startTime:this.startTime,
-            endTime:this.endTime
           }
         }).then(res=>{
-          this.$message({
-            showClose: true,
-            message: '提交成功！',
-            type: 'success'
-          })
-          this.dialogVisible=false
+          if (res.data===0){
+            this.$axios({
+              url:"http://localhost:8096/insertPatientAppointment",
+              method: "post",
+              data:{
+                doctorPhone:this.doctorPhone,
+                patientPhone: this.$session.get("phone"),
+                date:this.date1,
+                startTime:this.startTime,
+                endTime:this.endTime
+              }
+            }).then(res=>{
+              this.$message({
+                showClose: true,
+                message: '提交成功！',
+                type: 'success'
+              })
+              this.updateDate()
+              this.dialogVisible=false
+            })
+          }
+          else {
+            this.$message({
+              showClose: true,
+              message: '一个医生只能预约一次！',
+              type: 'warning'
+            })
+            this.doctorPhone=""
+
+          }
         })
 
+
       },
-      open () {
-        this.$confirm('此操作将永久删除该条目, 是否继续?', '提示', {
+      refuse (row) {
+        this.$confirm('请确认操作', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+        }).then(async () => {
+              await this.$axios({
+                url: 'http://localhost:8096/deletePatientsAppointment',
+                method: 'post',
+                data: {
+                  num: row['num'],
+                }
+              }).then(res => {
+                this.$message({
+                  showClose: true,
+                  message: '取消成功！',
+                  type: 'success'
+                })
+                this.updateDate()
+              })
+
+
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消操作'
           })
+        })
+      },
+      updateDate(){
+        this.$axios({
+          url:"http://localhost:8096/getPatientsAppointment",
+          method:"post",
+          data:{
+            patientPhone:this.$session.get("phone")
+          }
+        }).then(res=>{
+          this.tableData=res.data
         })
       },
       handleClose (done) {
