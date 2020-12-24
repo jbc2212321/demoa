@@ -17,6 +17,7 @@ import MyPatient from '../doctorviews/MyPatient'
 import UploadCsv from '../adminviews/UploadCsv'
 import MyAppointment from '../patientviews/MyAppointment'
 import DoctorAppointment from '../doctorviews/DoctorAppointment'
+import LogManagement from '../adminviews/LogManagement'
 Vue.use(VueRouter)
 
 const routes = [
@@ -33,6 +34,14 @@ const routes = [
     name: 'AdminHome',
     component: AdminHome,
     children:[
+      {
+        path:"/admin/LogManagement",
+        component:LogManagement,
+        meta: {
+          requireAuth: true,
+          identity:1
+        },
+      },
       {
         path:"/admin/UserManagement",
         component:UserManagement,
@@ -53,6 +62,23 @@ const routes = [
     meta: {
       requireAuth: true,
       identity:1
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity!==store.state.identity){
+        alert("用户身份不匹配!")
+        next({ path: '/' })
+      }else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/admin/LogManagement',
+    name: 'LogManagement',
+    component: LogManagement,
+    meta: {
+      requireAuth: true,
+      identity:0
     },
     beforeEnter: (to, from, next) => {
       if (to.meta.identity!==store.state.identity){

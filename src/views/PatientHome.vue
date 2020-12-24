@@ -17,28 +17,28 @@
               :collapse="isCollapse"
       >
 
-        <router-link to="MyCase">
+        <router-link to="MyCase" class="a">
           <el-menu-item index="2">
             <i class="el-icon-s-custom"></i>
             <span slot="title">数据查询</span>
           </el-menu-item>
         </router-link>
 
-        <router-link to="MyDoctor">
+        <router-link to="MyDoctor" class="a">
         <el-menu-item index="3">
           <i class="el-icon-s-custom"></i>
           <span slot="title">我的医师</span>
         </el-menu-item>
         </router-link>
 
-        <router-link to="MyAppointment">
+        <router-link to="MyAppointment" class="a">
           <el-menu-item index="4">
             <i class="el-icon-message-solid"></i>
             <span slot="title">我的预约</span>
           </el-menu-item>
         </router-link>
 
-        <router-link to="MyData">
+        <router-link to="MyData" class="a">
           <el-menu-item index="5">
             <i class="el-icon-tickets"></i>
             <span slot="title">个人资料</span>
@@ -120,6 +120,9 @@ export default {
 </script>
 
 <style scoped>
+  .a{
+    text-decoration: none;
+  }
 h3{
   color:#f0ebe7;
 }

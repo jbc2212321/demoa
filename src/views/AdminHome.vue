@@ -17,26 +17,28 @@
                     :collapse="isCollapse"
             >
 
-                <router-link to="/admin/UserManagement">
+                <router-link to="/admin/UserManagement" class="a">
                     <el-menu-item index="2">
                         <i class="el-icon-s-custom"></i>
                         <span slot="title">用户管理</span>
                     </el-menu-item>
                 </router-link>
 
-                <el-menu-item index="3">
-                    <i class="el-icon-document"></i>
-                    <span slot="title">日志管理</span>
-                </el-menu-item>
+                <router-link to="/admin/LogManagement" class="a">
+                    <el-menu-item index="3" class="a">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">日志管理</span>
+                    </el-menu-item>
+                </router-link>
 
-                <router-link to="UploadCsv">
+                <router-link to="UploadCsv" class="a">
                     <el-menu-item index="4">
                         <i class="el-icon-upload2"></i>
                         <span slot="title">上传加密</span>
                     </el-menu-item>
                 </router-link>
 
-                <el-menu-item index="5">
+                <el-menu-item index="5" class="a">
                     <i class="el-icon-message-solid"></i>
                     <span slot="title">待办事项</span>
                 </el-menu-item>
@@ -90,19 +92,19 @@
     name: 'AdminHome',
     data () {
       return {
-        userName:"",
+        userName: '',
         isCollapse: true
       }
     },
     mounted () {
       this.$axios({
-        url:"http://localhost:8096/getAdminName",
-        method:"post",
-        data:{
-          phone:this.$session.get("phone")
+        url: 'http://localhost:8096/getAdminName',
+        method: 'post',
+        data: {
+          phone: this.$session.get('phone')
         }
-      }).then(res=>{
-        this.userName=res.data
+      }).then(res => {
+        this.userName = res.data
       })
     },
     methods: {
@@ -128,6 +130,10 @@
   }
 </script>
 <style scoped>
+    .a {
+        text-decoration: none;
+    }
+
     .el-header {
         background-color: #ffffff;
         color: #333;
