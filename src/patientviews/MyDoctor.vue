@@ -29,7 +29,7 @@
           <el-table-column
                   prop="name"
                   label="医生姓名"
-                  width="180">
+                  width="150">
           </el-table-column>
           <el-table-column
                   prop="tag"
@@ -60,9 +60,9 @@
             </template>
           </el-table-column>
           <el-table-column
-                           prop="tag"
-                           label="操作"
-                           width="200">
+                  prop="tag"
+                  label="操作"
+                  width="200">
               <template slot-scope="scope">
             <el-button size="mini" @click="choose(scope.row)">选择</el-button>
               <el-button
@@ -131,7 +131,7 @@
                 <el-table-column
                         prop="name"
                         label="医生姓名"
-                        width="300">
+                        width="180">
                     <!-- :formatter="formatter"> -->
                 </el-table-column>
                 <el-table-column
@@ -151,6 +151,17 @@
                         prop="tel"
                         label="手机号">
                     <!-- :formatter="formatter"> -->
+                </el-table-column>
+                <el-table-column
+                        prop="state"
+                        label="状态"
+                        width="180">
+                    <template slot-scope="scope">
+                        <el-tag
+                                :type="scope.row.state ===0 ? 'info' : scope.row.state === 1 ? 'success':'danger'"
+                                disable-transitions>{{trans[scope.row.state]}}
+                        </el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="tag"
@@ -178,16 +189,16 @@
     name: 'MyDoctor',
     data () {
       return {
-        editDoctorPhone:"",
-        checkList:['口腔科','血液科'],
-        xyList:['口腔科','血液科'],
-        ykList:['口腔科','血液科'],
-        chooseTag:"",
-        checked:[],
+        editDoctorPhone: '',
+        checkList: ['口腔科', '血液科'],
+        xyList: ['口腔科', '血液科'],
+        ykList: ['口腔科', '血液科'],
+        chooseTag: '',
+        checked: [],
         dialogVisible: false,
-        editVisible:false,
+        editVisible: false,
         DocList: [],
-        AfterList:[],
+        AfterList: [],
         filters: [{
           text: '口腔科',
           value: '口腔科'
@@ -198,6 +209,11 @@
         filter: '',
         currentPage: 1,
         pagesize: 8,
+        trans: {
+          0: '待通过',
+          1: '已选',
+          2: '不通过',
+        }
       }
     },
     computed: {
@@ -230,11 +246,12 @@
       this.$axios({
         url: 'http://localhost:8096/getRelationship',
         method: 'post',
-        data:{
-          PatientPhone:this.$session.get("phone")
+        data: {
+          PatientPhone: this.$session.get('phone')
         }
       }).then(res => {
         this.AfterList = res.data
+        // console.log(this.AfterList)
       })
     },
     methods: {
@@ -255,7 +272,7 @@
         this.$confirm('确认关闭？')
           .then(_ => {
             done()
-            this.checked=[]
+            this.checked = []
             this.$axios({
               url: 'http://localhost:8096/getAllDoc',
               method: 'get',
@@ -266,47 +283,47 @@
           .catch(_ => {
           })
       },
-      checkChoose(){
-        var yk=0;
-        var xy=0;
-        var list=this.AfterList.concat(this.checked)
-        for (let i = 0; i <list.length ; i++) {
-            if (list[i]["tag"] === "血液科") {
-              xy++
-            } else if (list[i]["tag"] === "口腔科") {
-              yk++
-            }
-        }
-        console.log("xy:",xy,"yk:",yk)
-        return {
-          "xy":xy,
-          "yk":yk
-        }
-        if (xy===1&&yk===1){
-          return false
-        }
-        return xy <= 1 && yk <= 1;
-
-      },
-      choose(row){
-        if (!this.checked.includes(row)){
-          var check=this.checkChoose()
-          var xy=check.xy
-          var yk =check.yk
-          if (row["tag"]==="血液科"){
+      checkChoose () {
+        var yk = 0
+        var xy = 0
+        var list = this.AfterList.concat(this.checked)
+        for (let i = 0; i < list.length; i++) {
+          if (list[i]['tag'] === '血液科') {
             xy++
-          }else if (row["tag"]==="口腔科"){
+          } else if (list[i]['tag'] === '口腔科') {
             yk++
           }
-          if (xy<2&&yk<2){
-            row["choose"]="已选"
+        }
+        console.log('xy:', xy, 'yk:', yk)
+        return {
+          'xy': xy,
+          'yk': yk
+        }
+        if (xy === 1 && yk === 1) {
+          return false
+        }
+        return xy <= 1 && yk <= 1
+
+      },
+      choose (row) {
+        if (!this.checked.includes(row)) {
+          var check = this.checkChoose()
+          var xy = check.xy
+          var yk = check.yk
+          if (row['tag'] === '血液科') {
+            xy++
+          } else if (row['tag'] === '口腔科') {
+            yk++
+          }
+          if (xy < 2 && yk < 2) {
+            row['choose'] = '已选'
             this.checked.push(row)
             this.$message({
               showClose: true,
               message: '选择成功！',
               type: 'success'
             })
-          }else {
+          } else {
             this.$message({
               showClose: true,
               message: '每个部门只能选择一个医生!',
@@ -316,11 +333,10 @@
 
         }
 
-
       },
-      cancel(row){
-        row["choose"]="未选"
-        if (this.checked.includes(row)){
+      cancel (row) {
+        row['choose'] = '未选'
+        if (this.checked.includes(row)) {
           this.checked.splice(this.checked.indexOf(row))
           this.$message({
             showClose: true,
@@ -330,38 +346,37 @@
         }
 
       },
-      chooseDoc() {
+      chooseDoc () {
         console.log(this.checked)
-        var yk=0;
-        var xy=0;
-        var list=this.AfterList
+        var yk = 0
+        var xy = 0
+        var list = this.AfterList
         console.log(list)
-        for (let i = 0; i <list.length ; i++) {
-          if (list[i]["choose"]==="已选") {
-            if (list[i]["tag"] === "血液科") {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i]['choose'] === '已选') {
+            if (list[i]['tag'] === '血液科') {
               xy++
-            } else if (list[i]["tag"] === "口腔科") {
+            } else if (list[i]['tag'] === '口腔科') {
               yk++
             }
           }
         }
-        if (xy===1 &&yk===1){
+        if (xy === 1 && yk === 1) {
           this.$message({
             showClose: true,
             message: '医师已经存在!',
             type: 'error'
           })
           return false
-        }
-        else {
+        } else {
           this.$axios({
             url: 'http://localhost:8096/addDoctorAndPermission',
             method: 'post',
-            data:{
-              PatientPhone:this.$session.get("phone"),
-              Doctor:this.checked
+            data: {
+              PatientPhone: this.$session.get('phone'),
+              Doctor: this.checked
             }
-          }).then(res=>{
+          }).then(res => {
             this.$message({
               showClose: true,
               message: '选择成功！',
@@ -370,13 +385,13 @@
             this.$axios({
               url: 'http://localhost:8096/getRelationship',
               method: 'post',
-              data:{
-                PatientPhone:this.$session.get("phone")
+              data: {
+                PatientPhone: this.$session.get('phone')
               }
             }).then(res => {
               this.AfterList = res.data
-              this.checked=[]
-              this.dialogVisible=false
+              this.checked = []
+              this.dialogVisible = false
               this.$axios({
                 url: 'http://localhost:8096/getAllDoc',
                 method: 'get',
@@ -394,114 +409,113 @@
           })
         }
       },
-      editRelationship(row){
-        this.editVisible=true
-        this.editDoctorPhone=row["tel"]
+      editRelationship (row) {
+        this.editVisible = true
+        this.editDoctorPhone = row['tel']
         this.$axios({
-          url:"http://localhost:8096/getPatientRelationship",
-          method:"post",
-          data:{
-            DoctorPhone:this.editDoctorPhone,
-            PatientPhone:this.$session.get("phone"),
+          url: 'http://localhost:8096/getPatientRelationship',
+          method: 'post',
+          data: {
+            DoctorPhone: this.editDoctorPhone,
+            PatientPhone: this.$session.get('phone'),
           }
-        }).then(res=>{
-          var list=[]
-          if (res.data[0]["blood"]){
-            list.push("血液科")
+        }).then(res => {
+          var list = []
+          if (res.data[0]['blood']) {
+            list.push('血液科')
           }
-          if (res.data[0]["tooth"]){
-            list.push("口腔科")
+          if (res.data[0]['tooth']) {
+            list.push('口腔科')
           }
-          if (row["tag"]==="口腔科"){
-            this.ykList =list
-            this.checkList=this.ykList
-            this.chooseTag="口腔科"
-          }else if (row["tag"]==="血液科"){
-            this.xyList =list
-            this.checkList=this.xyList
-            this.chooseTag="血液科"
+          if (row['tag'] === '口腔科') {
+            this.ykList = list
+            this.checkList = this.ykList
+            this.chooseTag = '口腔科'
+          } else if (row['tag'] === '血液科') {
+            this.xyList = list
+            this.checkList = this.xyList
+            this.chooseTag = '血液科'
           }
           // console.log("checklist:",this.checkList)
         })
 
-
       },
-      choosePermission(){
+      choosePermission () {
         // console.log("checklist2:",this.checkList)
         this.$axios({
-          url:"http://localhost:8096/updateRelationship",
-          method:"post",
-          data:{
-            DoctorPhone:this.editDoctorPhone,
-            PatientPhone:this.$session.get("phone"),
+          url: 'http://localhost:8096/updateRelationship',
+          method: 'post',
+          data: {
+            DoctorPhone: this.editDoctorPhone,
+            PatientPhone: this.$session.get('phone'),
             checkList: this.checkList
           }
-        }).then(res=>{
+        }).then(res => {
           this.$message({
             showClose: true,
             message: '选择成功！',
             type: 'success'
           })
           this.$axios({
-            url:"http://localhost:8096/getPatientRelationship",
-            method:"post",
-            data:{
-              DoctorPhone:this.editDoctorPhone,
-              PatientPhone:this.$session.get("phone"),
+            url: 'http://localhost:8096/getPatientRelationship',
+            method: 'post',
+            data: {
+              DoctorPhone: this.editDoctorPhone,
+              PatientPhone: this.$session.get('phone'),
             }
-          }).then(res=>{
-            var list=[]
-            if (res.data[0]["blood"]){
-              list.push("血液科")
+          }).then(res => {
+            var list = []
+            if (res.data[0]['blood']) {
+              list.push('血液科')
             }
             // console.log("list1:",list)
-            if (res.data[0]["tooth"]){
-              list.push("口腔科")
+            if (res.data[0]['tooth']) {
+              list.push('口腔科')
             }
             // console.log("list2:",list)
-            if (this.chooseTag==="口腔科"){
-              this.ykList =this.list
-            }else if (this.chooseTag==="血液科"){
-              this.xyList =this.list
+            if (this.chooseTag === '口腔科') {
+              this.ykList = this.list
+            } else if (this.chooseTag === '血液科') {
+              this.xyList = this.list
             }
-            this.editVisible=false
+            this.editVisible = false
           })
 
         })
       },
-      delDoc:function (row) {
+      delDoc: function (row) {
         this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(()=>{
+        }).then(() => {
 
+          this.$axios({
+            url: 'http://localhost:8096/deleteRelationship',
+            method: 'post',
+            data: {
+              DoctorPhone: row['tel'],
+              PatientPhone: this.$session.get('phone'),
+            }
+          }).then(res => {
             this.$axios({
-              url:"http://localhost:8096/deleteRelationship",
-              method:"post",
-              data:{
-                DoctorPhone:row["tel"],
-                PatientPhone:this.$session.get("phone"),
+              url: 'http://localhost:8096/getRelationship',
+              method: 'post',
+              data: {
+                PatientPhone: this.$session.get('phone')
               }
-            }).then(res=>{
-              this.$axios({
-                url: 'http://localhost:8096/getRelationship',
-                method: 'post',
-                data:{
-                  PatientPhone:this.$session.get("phone")
-                }
-              }).then(res => {
-                this.AfterList = res.data
-              })
+            }).then(res => {
+              this.AfterList = res.data
             })
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });
+          })
         })
       },
-      handleEdit:function () {
+      handleEdit: function () {
 
       },
     }

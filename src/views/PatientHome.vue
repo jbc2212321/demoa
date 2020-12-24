@@ -1,25 +1,82 @@
 <template>
   <div id="Patient">
     <el-container>
-      <el-aside width="18">
-        <el-aside>
-          <el-menu :default-openeds="['3']">
-            <el-submenu index="3">
-              <template slot="title"><i class="el-icon-menu"></i>智慧医疗-病患</template>
-              <router-link to="MyCase"><el-menu-item index="3-1">数据查询</el-menu-item></router-link>
-              <router-link to="MyDoctor"> <el-menu-item index="3-2">我的医师</el-menu-item></router-link>
-              <router-link to="MyAppointment"><el-menu-item index="3-3">我的预约</el-menu-item></router-link>
-              <router-link to="MyData"><el-menu-item index="3-4">个人资料</el-menu-item></router-link>
-            </el-submenu>
-          </el-menu>
-        </el-aside>
-      </el-aside>
-      <el-container>
-        <el-header><h1>智慧医疗数据管理系统</h1></el-header>
+      <!--        <el-aside >-->
+      <!--          <el-menu :default-openeds="['1']">-->
+      <!--            <el-row class="tac" align="top">-->
+      <el-menu
+              height="800px"
+              default-active="2"
+              class="el-menu-vertical-demo"
+              border-right-width="0px"
+              @open="handleOpen111"
+              @close="handleClose111"
+              background-color="#2F4050"
+              text-color="#fff"
+              active-text-color="#ffd04b"
+              :collapse="isCollapse"
+      >
+
+        <router-link to="MyCase">
+          <el-menu-item index="2">
+            <i class="el-icon-s-custom"></i>
+            <span slot="title">数据查询</span>
+          </el-menu-item>
+        </router-link>
+
+        <router-link to="MyDoctor">
+        <el-menu-item index="3">
+          <i class="el-icon-s-custom"></i>
+          <span slot="title">我的医师</span>
+        </el-menu-item>
+        </router-link>
+
+        <router-link to="MyAppointment">
+          <el-menu-item index="4">
+            <i class="el-icon-message-solid"></i>
+            <span slot="title">我的预约</span>
+          </el-menu-item>
+        </router-link>
+
+        <router-link to="MyData">
+          <el-menu-item index="5">
+            <i class="el-icon-tickets"></i>
+            <span slot="title">个人资料</span>
+          </el-menu-item>
+        </router-link>
+      </el-menu>
+
+    <el-container>
+        <el-header>
+          <el-col :span="4">
+            <el-row :gutter="15">
+              <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+                <el-radio-button :label="false">展开</el-radio-button>
+                <el-radio-button :label="true">收起</el-radio-button>
+              </el-radio-group>
+            </el-row>
+          </el-col>
+
+          <el-col :span="5" :offset="15">
+            <el-row :gutter="15">
+              <el-col :span="5">
+                <el-dropdown>
+                <span class="el-dropdown-link">
+                  {{userName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item ><el-button @click="outLogin">登出</el-button></el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-header>
+
 <!--        <el-main>Main</el-main>-->
-        <div style="height: 700px;overflow: auto"><router-view></router-view></div>
-        <el-footer><br><br><br>Copyright 发际线与我作队</el-footer>
-      </el-container>
+        <div style="height: 800px;overflow: auto"><router-view></router-view></div>
+      <el-footer><br><br><br>Copyright 发际线与我作队</el-footer>
+    </el-container>
     </el-container>
 
 
@@ -31,13 +88,42 @@ export default {
   name: 'PatientHome',
   data(){
     return {
-      
+      isCollapse: true,
+      userName:""
     }
+  },
+  mounted () {
+    this.$axios({
+      url:"http://localhost:8096/getPatientName",
+      method:"post",
+      data:{
+        phone:this.$session.get("phone")
+      }
+    }).then(res=>{
+      this.userName=res.data
+    })
+  },
+  methods: {
+  outLogin(){
+    this.$session.remove("phone")
+    this.$router.push({
+      path: '/'
+    })
+  },
+  handleOpen111(key, keyPath) {
+    console.log(key, keyPath);
+  },
+  handleClose111(key, keyPath) {
+    console.log(key, keyPath);}
   }
 }
 </script>
 
 <style scoped>
+h3{
+  color:#f0ebe7;
+}
+
 .el-header {
   background-color: #ffffff;
   color: #333;
@@ -53,7 +139,7 @@ export default {
 }
 
 .el-aside {
-  background-color: #ffffff;
+  background-color:  #2F4050;
   color: #333;
   text-align: left;
   line-height: 818px;
@@ -63,7 +149,20 @@ export default {
   background-color: #ffffff;
   color: #333;
   text-align: center;
-  line-height: 760px;
+  line-height: 0;
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #439bf3;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
 }
 
 h1 {

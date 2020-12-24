@@ -5,8 +5,12 @@
                 width="33%"
                 :before-close="handleClose"
                 center>
-      <span>
-        <span class="demonstration">选择医生</span>
+
+<!--          <div class="dial-middle">-->
+
+            <span class="dial-middle">
+                <el-row>
+        <span class="demonstration">选择医生 </span>
           <el-select v-model="doctorPhone" placeholder="选择医生">
             <el-option
                     v-for="item in offices"
@@ -15,8 +19,10 @@
                     :value="item.doctorPhone">
             </el-option>
           </el-select>
-          <br><br>
-          <span class="demonstration">选择日期</span>
+                </el-row>
+          <br><br><br>
+                <el-row>
+          <span class="demonstration">选择日期 </span>
           <el-date-picker
                   v-model="date1"
                   align="right"
@@ -24,9 +30,11 @@
                   placeholder="选择日期"
                   :picker-options="pickerOptions">
           </el-date-picker>
-          <br><br>
+                </el-row>
+          <br><br><br>
+                <el-row>
           <template>
-            <span class="demonstration">起始时间</span>
+            <span class="demonstration">起始时间 </span>
             <el-time-select
                     placeholder="起始时间"
                     v-model="startTime"
@@ -36,8 +44,8 @@
                 end: '17:00'
               }">
             </el-time-select>
-            <br><br>
-            <span class="demonstration">截止时间</span>
+              <br><br>
+            <span class="demonstration">截止时间 </span>
             <el-time-select
                     placeholder="结束时间"
                     v-model="endTime"
@@ -49,39 +57,43 @@
               }">
             </el-time-select>
           </template>
-      </span>
-            <span slot="footer" class="dialog-footer">
-<!--                <template slot-scope="scope">-->
-          <el-button @click="submitAppointment" type="primary">提交预约</el-button>
-<!--                    </template>-->
-          </span>
+                </el-row>
+            </span>
+<!--                    </div>-->
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="submitAppointment" type="primary">提交预约</el-button>
+                </span>
+
         </el-dialog>
+
 
         <el-button @click="addAppointment">添加预约</el-button>
         <el-table
                 ref="filterTable"
                 :data="tableData"
                 style="width: 100%"
+                :header-cell-style="{textAlign: 'center'}"
+                :cell-style="{ textAlign: 'center' }"
                 height="600">
 
             <el-table-column
                     prop="num"
                     label="编号"
                     sortable
-                    width="80"
+                    width="120"
                     column-key="num">
             </el-table-column>
 
             <el-table-column
                     prop="name"
                     label="医生姓名"
-                    width="150">
+                    width="120">
             </el-table-column>
 
             <el-table-column
                     prop="tag"
                     label="所属科室"
-                    width="180">
+                    width="120">
                 <template slot-scope="scope">
                     <el-tag
                             :type="scope.row.tag === 1 ? 'primary' : 'success'"
@@ -98,7 +110,7 @@
             <el-table-column
                     prop="time"
                     label="预约时间"
-                    width="300">
+                    width="300" >
             </el-table-column>
 
             <el-table-column
@@ -126,6 +138,15 @@
 
     </div>
 </template>
+
+<style>
+    .dial-middle{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 
 <script>
   export default {
