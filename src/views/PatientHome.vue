@@ -84,6 +84,7 @@
 </template>
 
 <script>
+  import store from '../store'
 export default {
   name: 'PatientHome',
   data(){
@@ -105,10 +106,21 @@ export default {
   },
   methods: {
   outLogin(){
-    this.$session.remove("phone")
-    this.$router.push({
-      path: '/'
+    this.$axios({
+      url:"http://localhost:8096/userLoginOut",
+      method:"post",
+      data:{
+        phone:this.$session.get("phone"),
+        state:this.$store.state.identity
+      }
+    }).then(res=>{
+      this.$session.remove("phone")
+      this.$store.commit("OutLogin")
+      this.$router.push({
+        path: '/'
+      })
     })
+
   },
   handleOpen111(key, keyPath) {
     console.log(key, keyPath);

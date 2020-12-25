@@ -18,6 +18,8 @@ import UploadCsv from '../adminviews/UploadCsv'
 import MyAppointment from '../patientviews/MyAppointment'
 import DoctorAppointment from '../doctorviews/DoctorAppointment'
 import LogManagement from '../adminviews/LogManagement'
+import TodoList from '../adminviews/TodoList'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -33,41 +35,66 @@ const routes = [
     path: '/admin',
     name: 'AdminHome',
     component: AdminHome,
-    children:[
+    children: [
       {
-        path:"/admin/LogManagement",
-        component:LogManagement,
+        path: '/admin/TodoList',
+        component: TodoList,
         meta: {
           requireAuth: true,
-          identity:1
+          identity: 1
         },
       },
       {
-        path:"/admin/UserManagement",
-        component:UserManagement,
+        path: '/admin/LogManagement',
+        component: LogManagement,
         meta: {
           requireAuth: true,
-          identity:1
+          identity: 1
         },
       },
       {
-        path:"/admin/UploadCsv",
-        component:UploadCsv,
+        path: '/admin/UserManagement',
+        component: UserManagement,
         meta: {
           requireAuth: true,
-          identity:1
+          identity: 1
+        },
+      },
+      {
+        path: '/admin/UploadCsv',
+        component: UploadCsv,
+        meta: {
+          requireAuth: true,
+          identity: 1
         },
       }
     ],
     meta: {
       requireAuth: true,
-      identity:1
+      identity: 1
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/admin/TodoList',
+    name: 'TodoList',
+    component: TodoList,
+    meta: {
+      requireAuth: true,
+      identity: 0
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
+        next({ path: '/' })
+      } else {
         next()
       }
     }
@@ -78,13 +105,13 @@ const routes = [
     component: LogManagement,
     meta: {
       requireAuth: true,
-      identity:0
+      identity: 0
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -95,13 +122,13 @@ const routes = [
     component: UploadCsv,
     meta: {
       requireAuth: true,
-      identity:0
+      identity: 0
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -112,13 +139,13 @@ const routes = [
     component: UserManagement,
     meta: {
       requireAuth: true,
-      identity:0
+      identity: 0
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -129,47 +156,47 @@ const routes = [
     component: () => import(/* webpackChunkName: "patient" */ '../views/PatientHome.vue'),
     meta: {
       requireAuth: true,
-      identity:2
+      identity: 2
     },
     children: [
       {
-        path:"/patient/MyDoctor",
-        component:MyDoctor,
+        path: '/patient/MyDoctor',
+        component: MyDoctor,
         meta: {
           requireAuth: true,
-          identity:2
+          identity: 2
         },
       },
       {
-        path:"/patient/MyCase",
-        component:MyCase,
+        path: '/patient/MyCase',
+        component: MyCase,
         meta: {
           requireAuth: true,
-          identity:2
+          identity: 2
         },
       },
       {
-        path:"/patient/MyData",
-        component:MyData,
+        path: '/patient/MyData',
+        component: MyData,
         meta: {
           requireAuth: true,
-          identity:2
+          identity: 2
         },
       },
       {
-        path:"/patient/MyAppointment",
-        component:MyAppointment,
+        path: '/patient/MyAppointment',
+        component: MyAppointment,
         meta: {
           requireAuth: true,
-          identity:2
+          identity: 2
         },
       }
     ],
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -180,13 +207,13 @@ const routes = [
     component: MyAppointment,
     meta: {
       requireAuth: true,
-      identity:2
+      identity: 2
     },
-    beforeEnter:(to,from,next)=>{
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -197,13 +224,13 @@ const routes = [
     component: MyDoctor,
     meta: {
       requireAuth: true,
-      identity:2
+      identity: 2
     },
-    beforeEnter:(to,from,next)=>{
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -214,13 +241,13 @@ const routes = [
     component: MyCase,
     meta: {
       requireAuth: true,
-      identity:2
+      identity: 2
     },
-    beforeEnter:(to,from,next)=>{
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -231,13 +258,13 @@ const routes = [
     component: MyData,
     meta: {
       requireAuth: true,
-      identity:2
+      identity: 2
     },
-    beforeEnter:(to,from,next)=>{
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
+    beforeEnter: (to, from, next) => {
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -250,7 +277,7 @@ const routes = [
       {
         path: '/doctor/DoctorAppointment',
         name: 'DoctorAppointment',
-        component:DoctorAppointment ,
+        component: DoctorAppointment,
         meta: {
           requireAuth: true,
           identity: 3
@@ -259,7 +286,7 @@ const routes = [
       {
         path: '/doctor/DoctorData',
         name: 'DoctorData',
-        component:DoctorData ,
+        component: DoctorData,
         meta: {
           requireAuth: true,
           identity: 3
@@ -268,23 +295,23 @@ const routes = [
       {
         path: '/doctor/MyPatient',
         name: 'MyPatient',
-        component:MyPatient,
+        component: MyPatient,
         meta: {
           requireAuth: true,
           identity: 3
         }
       },
-      ],
+    ],
     meta: {
       requireAuth: true,
-      identity:3
+      identity: 3
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
-        console.log("???")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
+        console.log('???')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -292,17 +319,17 @@ const routes = [
   {
     path: '/doctor/DoctorAppointment',
     name: 'DoctorAppointment',
-    component:DoctorAppointment ,
+    component: DoctorAppointment,
     meta: {
       requireAuth: true,
       identity: 3
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
-        console.log("???")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
+        console.log('???')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -310,17 +337,17 @@ const routes = [
   {
     path: '/doctor/DoctorData',
     name: 'DoctorData',
-    component:DoctorData ,
+    component: DoctorData,
     meta: {
       requireAuth: true,
       identity: 3
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
-        console.log("???")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
+        console.log('???')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -328,17 +355,17 @@ const routes = [
   {
     path: '/doctor/MyPatient',
     name: 'MyPatient',
-    component:MyPatient ,
+    component: MyPatient,
     meta: {
       requireAuth: true,
       identity: 3
     },
     beforeEnter: (to, from, next) => {
-      if (to.meta.identity!==store.state.identity){
-        alert("用户身份不匹配!")
-        console.log("???")
+      if (to.meta.identity !== store.state.identity) {
+        alert('用户身份不匹配!')
+        console.log('???')
         next({ path: '/' })
-      }else {
+      } else {
         next()
       }
     }
@@ -381,7 +408,7 @@ router.beforeEach((to, from, next) => {
     if (store.state.isLogin) {
       next()
     } else {
-      console.log("why")
+      // console.log("why")
       next({ path: '/' })
     }
   } else {

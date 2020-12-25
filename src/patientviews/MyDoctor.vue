@@ -251,7 +251,7 @@
         }
       }).then(res => {
         this.AfterList = res.data
-        // console.log(this.AfterList)
+        console.log(this.AfterList)
       })
     },
     methods: {

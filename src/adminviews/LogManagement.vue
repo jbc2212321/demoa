@@ -97,7 +97,9 @@
                         prop="manage"
                         label="管理"
                         width="200">
-                    <el-button size="small" type="danger" @click="open">删除</el-button>
+                    <template slot-scope="scope">
+                        <el-button size="small" type="danger" @click="deleteRow(scope.row)">删除</el-button>
+                    </template>
                 </el-table-column>
             </el-table>
         </template>
@@ -141,39 +143,43 @@
     mounted () {
       this.axios()
     },
-    watch:{
-      filterList(n,o){
-        if(n){
-          if(n.length === 3 || n.length === 0){
+    watch: {
+      filterList (n, o) {
+        if (n) {
+          if (n.length === 3 || n.length === 0) {
             this.PageData = this.AllData
             this.currentPage = 1
             this.pagesize = 8
           }
-        if(n.length === 1){
-          this.PageData = this.AllData.filter((i)=>{return i.account === n[0]})
-          this.currentPage = 1
-          this.pagesize = 8
-        }
-        if(n.length ===2){
-          this.PageData = this.AllData.filter((i)=>{return i.account === n[0] || i.account ===n[1] })
-          this.currentPage = 1
-          this.pagesize = 8
-        }
+          if (n.length === 1) {
+            this.PageData = this.AllData.filter((i) => {
+              return i.account === n[0]
+            })
+            this.currentPage = 1
+            this.pagesize = 8
+          }
+          if (n.length === 2) {
+            this.PageData = this.AllData.filter((i) => {
+              return i.account === n[0] || i.account === n[1]
+            })
+            this.currentPage = 1
+            this.pagesize = 8
+          }
         }
       }
     },
-  //   computed:{
-  //     tableData:function () {
-  // return this.AllData.filter((i)=>{
-  //   if(this.filterList.length === 3){
-  //     return true
-  //   }
-  // })
-  //     },
-  //     PageData: function () {
-  //       return this.tableData.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
-  //     }
-  //   },
+    //   computed:{
+    //     tableData:function () {
+    // return this.AllData.filter((i)=>{
+    //   if(this.filterList.length === 3){
+    //     return true
+    //   }
+    // })
+    //     },
+    //     PageData: function () {
+    //       return this.tableData.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
+    //     }
+    //   },
     // computed: {
     //   tableData: function () {
     //
@@ -213,13 +219,13 @@
     // },
     //方便语音吗?
     methods: {
-      axios(){
+      axios () {
         this.$axios({
           url: 'http://localhost:8096/getAllLog',
           method: 'get'
         }).then(res => {
           this.AllData = res.data
-            this.PageData = [...res.data]
+          this.PageData = [...res.data]
         })
       },
       filterTag (value, row) {
@@ -235,15 +241,31 @@
       handleFilterChange (value) {
         this.filterList = value.status
       },
-      open () {
+      deleteRow (row) {
         this.$confirm('执行删除操作后不可恢复, 是否确认操作?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
+          this.$axios({
+            url: 'http://localhost:8096/deleteLogByNum',
+            method: 'post',
+            data: {
+              num: row['num']
+            }
+          }).then(res => {
+            this.$axios({
+              url: 'http://localhost:8096/getAllLog',
+              method: 'get'
+            }).then(res => {
+              this.AllData = res.data
+              this.PageData = [...res.data]
+              this.$message({
+                type: 'success',
+                message: '操作成功!'
+              })
+            })
+
           })
         }).catch(() => {
           this.$message({

@@ -38,11 +38,14 @@
                     </el-menu-item>
                 </router-link>
 
-                <el-menu-item index="5" class="a">
+                <router-link to="TodoList" class="a">
+                <el-menu-item index="5" >
                     <i class="el-icon-message-solid"></i>
                     <span slot="title">待办事项</span>
                 </el-menu-item>
+                </router-link>
             </el-menu>
+
             <el-container>
 
                 <el-header>
@@ -109,10 +112,21 @@
     },
     methods: {
       outLogin () {
-        this.$session.remove('phone')
-        this.$router.push({
-          path: '/'
+        this.$axios({
+          url:"http://localhost:8096/userLoginOut",
+          method:"post",
+          data:{
+            phone:this.$session.get("phone"),
+            state:this.$store.state.identity
+          }
+        }).then(res=>{
+          this.$session.remove("phone")
+          this.$store.commit("OutLogin")
+          this.$router.push({
+            path: '/'
+          })
         })
+
       },
       handleOpen111 (key, keyPath) {
         console.log(key, keyPath)
