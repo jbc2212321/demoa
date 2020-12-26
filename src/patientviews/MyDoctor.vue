@@ -484,30 +484,39 @@
         })
       },
       delDoc: function (row) {
-        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        this.$confirm('此操作需经过管理员同意, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-
-          this.$axios({
-            url: 'http://localhost:8096/deleteRelationship',
-            method: 'post',
-            data: {
-              DoctorPhone: row['tel'],
-              PatientPhone: this.$session.get('phone'),
-            }
-          }).then(res => {
             this.$axios({
-              url: 'http://localhost:8096/getRelationship',
-              method: 'post',
-              data: {
-                PatientPhone: this.$session.get('phone')
+              url:"http://localhost:8096/sendDeleteDoctor",
+              method:"post",
+              data:{
+                    doctorPhone: row['tel'],
+                    patientPhone: this.$session.get('phone'),
               }
-            }).then(res => {
-              this.AfterList = res.data
+            }).then(res=>{
+              row["state"]=0
             })
-          })
+          // this.$axios({
+          //   url: 'http://localhost:8096/deleteRelationship',
+          //   method: 'post',
+          //   data: {
+          //     DoctorPhone: row['tel'],
+          //     PatientPhone: this.$session.get('phone'),
+          //   }
+          // }).then(res => {
+          //   this.$axios({
+          //     url: 'http://localhost:8096/getRelationship',
+          //     method: 'post',
+          //     data: {
+          //       PatientPhone: this.$session.get('phone')
+          //     }
+          //   }).then(res => {
+          //     this.AfterList = res.data
+          //   })
+          // })
         }).catch(() => {
           this.$message({
             type: 'info',

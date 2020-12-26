@@ -1,7 +1,7 @@
 <template xmlns:text-align="http://www.w3.org/1999/xhtml">
 
     <div id="Login">
-<!--        <canvas id="canvas"></canvas>-->
+        <!--        <canvas id="canvas"></canvas>-->
         <br>
         <br>
         <br>
@@ -54,10 +54,47 @@
         <el-row>
             <el-col :span="4" :offset="11">
                 <div text-align:center>
-                    <el-link type="primary" @click="toRegister">没有账号? 马上注册</el-link>
+                    <el-link type="primary" @click="toRegister">注册账号</el-link>
+                    <br>
+                    <el-link type="primary" @click="dialogVisible = true">忘记密码?</el-link>
                 </div>
             </el-col>
         </el-row>
+
+        <el-dialog
+                :visible.sync="dialogVisible"
+                width="35%"
+                title="请提供电话号码和账户类型，管理员会协助重置密码"
+                :before-close="handleClose"
+                :show-close="true"
+                center>
+      <span>
+        <el-form :model="form">
+          <el-row>
+            <el-col :span="20">
+              <el-form-item label="电话号码" :label-width="formLabelWidth">
+                <el-input v-model="form.tel"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="20">
+              <el-form-item label="账户类型" :label-width="formLabelWidth">
+                <el-select v-model="form.type" placeholder="请选择账户类型">
+                  <el-option label="病患" value="病患"></el-option>
+                  <el-option label="医师" value="医师"></el-option>
+                  <el-option label="管理员" value="管理员"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </span>
+            <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="resetPassword">提 交</el-button>
+      </span>
+        </el-dialog>
 
     </div>
 </template>
@@ -65,13 +102,14 @@
 <script>
   // import { draw, init } from '../assets/js/canvas'//注意路径
   // import {     draw,init,Circle,currentCirle,canvas,circles,ctx,current_circle,w,h } from '../../static/js/canvas'//注意路径
-// import '../assets/js/canvas.js'
+  // import '../assets/js/canvas.js'
   export default {
     name: 'Login',
     data () {
       return {
         username: '',
         password: '',
+        dialogVisible: false,
         options: [{
           value: '2',
           label: '患者'
@@ -82,12 +120,75 @@
           value: '1',
           label: '管理员'
         }],
+        form: {
+          tel: '',
+          type: '',
+        },
+        formLabelWidth: '120px',
         value: ''
       }
     },
     mounted () {
     },
     methods: {
+      resetPassword () {
+        if (!(/^1[34578]\d{9}$/.test(this.form.tel))) {
+          this.$message({
+            // showClose: true,
+            message: '手机号不正确！',
+            type: 'warning'
+          })
+          this.form.tel = ''
+          return
+        }
+        if (this.form.type === '') {
+          this.$message({
+            showClose: true,
+            message: '请选择类型！',
+            type: 'warning'
+          })
+          return
+        }
+        this.$axios({
+          url: 'http://localhost:8096/sendResetPassword',
+          method: 'post',
+          data: {
+            phone: this.form.tel,
+            type: this.form.type,
+          }
+        }).then(res => {
+          console.log(res.data)
+          if (res.data === false) {
+            this.$message({
+              showClose: true,
+              message: '无该手机号！',
+              type: 'error'
+            })
+            this.form.tel=""
+          } else {
+            this.$message({
+              showClose: true,
+              message: '已向管理员发送请求！',
+              type: 'success'
+            })
+            this.form.tel=""
+            this.form.type=""
+            this.dialogVisible = false
+          }
+
+        })
+
+      },
+      handleClose (done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.form.tel=""
+            this.form.type=""
+            done()
+          })
+          .catch(_ => {
+          })
+      },
       submit: function () {
         if (this.username === '') {
           this.$message({
@@ -187,5 +288,12 @@
     body {
         overflow-x: hidden;
         overflow-y: hidden;
+    }
+</style>
+<style scoped>
+    .el-dialog .el-dialog__body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>

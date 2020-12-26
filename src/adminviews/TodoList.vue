@@ -1,61 +1,6 @@
 <template>
     <div id="TodoList">
         <template>
-            <el-dialog
-                    :visible.sync="dialogVisible"
-                    width="33%"
-                    :before-close="handleClose"
-                    center>
-      <span>
-        <span class="demonstration">选择医生</span>
-          <el-select v-model="doctorname" placeholder="选择医生">
-            <el-option
-                    v-for="item in offices"
-                    :key="item.doctorname"
-                    :label="item.label"
-                    :value="item.doctorname">
-            </el-option>
-          </el-select>
-          <br><br>
-          <span class="demonstration">选择日期</span>
-          <el-date-picker
-                  v-model="date1"
-                  align="right"
-                  type="date"
-                  placeholder="选择日期"
-                  :picker-options="pickerOptions">
-          </el-date-picker>
-          <br><br>
-          <template>
-            <span class="demonstration">起始时间</span>
-            <el-time-select
-                    placeholder="起始时间"
-                    v-model="startTime"
-                    :picker-options="{
-                start: '9:00',
-                step: '01:00',
-                end: '17:00'
-              }">
-            </el-time-select>
-            <br><br>
-            <span class="demonstration">截止时间</span>
-            <el-time-select
-                    placeholder="结束时间"
-                    v-model="endTime"
-                    :picker-options="{
-                start: '09:00',
-                step: '01:00',
-                end: '17:00',
-                minTime: startTime
-              }">
-            </el-time-select>
-          </template>
-      </span>
-                <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false" type="primary">提交预约</el-button>
-          </span>
-            </el-dialog>
-
             <el-button
                     onclick="document.getElementById('reset').style.display='block';document.getElementById('delete').style.display='none'">
                 重置密码
@@ -162,24 +107,32 @@
 
                     <el-table-column
                             prop="name"
-                            label="用户名"
+                            label="病人姓名"
                             width="120"
                             align="center">
                     </el-table-column>
 
                     <el-table-column
                             prop="id"
-                            label="用户ID"
-                            width="150"
+                            label="病人ID"
+                            width="80"
                             align="center">
                     </el-table-column>
 
                     <el-table-column
-                            prop="tel"
-                            label="手机号"
-                            width="150"
+                            prop="doctorname"
+                            label="医生姓名"
+                            width="120"
                             align="center">
                     </el-table-column>
+
+                    <el-table-column
+                            prop="doctorid"
+                            label="医生ID"
+                            width="80"
+                            align="center">
+                    </el-table-column>
+
 
                     <el-table-column
                             prop="content"
