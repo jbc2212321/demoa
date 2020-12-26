@@ -1,28 +1,33 @@
 <template xmlns:text-align="http://www.w3.org/1999/xhtml">
 <div id="Register">
-  <br><br><br>
+  <canvas id="canvas"></canvas>
+  <div class="mainbody">
   <h1>注册</h1>
   <div id="layout">
     <el-row>
-      <div class="tex"><el-col :span="1" :offset="8">用户名</el-col></div>
+      <div class="tex"><el-col :span="2" :offset="8">用户名</el-col>
       <el-col :span="6" :offset="0"><div><el-input placeholder="请输入用户名" minlength="2" maxlength="10" v-model="username" clearable></el-input></div></el-col>
+      </div>
     </el-row>
     <el-row>
-      <div class="tex"><el-col :span="1" :offset="8">手机号</el-col></div>
+      <div class="tex"><el-col :span="2" :offset="8">手机号</el-col>
       <el-col :span="6" :offset="0"><div ><el-input placeholder="请输入手机号" v-model="phoneNumber" clearable></el-input></div></el-col>
+      </div>
     </el-row>
     <el-row>
-      <div class="tex"><el-col :span="1" :offset="8">输入密码</el-col></div>
+      <div class="tex"><el-col :span="2" :offset="8">输入密码</el-col>
       <el-col :span="6" :offset="0"><div ><el-input placeholder="请输入密码" minlength="6" maxlength="16" v-model="password" show-password></el-input></div></el-col>
+      </div>
     </el-row>
 
     <el-row>
-      <div class="tex"><el-col :span="1" :offset="8">确认密码</el-col></div>
+      <div class="tex"><el-col :span="2" :offset="8">确认密码</el-col>
       <el-col :span="6" :offset="0"><div ><el-input placeholder="请确认密码" minlength="6" maxlength="16" v-model="check_password" show-password></el-input></div></el-col>
+      </div>
     </el-row>
 
     <el-row>
-      <div class="tex"><el-col :span="1" :offset="8">选择权限</el-col></div>
+      <div class="tex"><el-col :span="2" :offset="8">选择权限</el-col></div>
 
       <el-col :span="6" :offset="0"><div id="app6"><template>
         <el-select v-model="value" placeholder="请选择账户类型">
@@ -35,10 +40,11 @@
         </el-select>
       </template></div>
       </el-col>
+
     </el-row>
 
     <br>
-        <el-col :span="10" :offset="9">
+        <el-col :span="10" :offset="10">
           <el-checkbox v-model="checked">我已认真阅读并同意用户协议</el-checkbox>
 </el-col>
 <el-col :span="4" :offset="14">
@@ -47,6 +53,7 @@
 <el-col :span="4" :offset="11">
 <div text-align:center><el-link type="primary" @click="toLogin">已有账号? 马上登录</el-link></div>
 </el-col>
+</div>
 </div>
 </div>
 </template>
@@ -165,18 +172,26 @@ name: "Register",
 }
 </script>
 
+<style src="../assets/css/canvas.css" scoped>
+
+</style>
+
 <style scoped>
+  /*@import "../assets/css/canvas.css";*/
 h1{
   font-size:40px;
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   text-align: center;
-  padding:1cm 1cm 0 0;
+  padding:1cm 0 0 0;
 }
 .tex{
   font-size:15px;
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   text-align: center;
-  padding:0.5cm 1cm 0 0;
+  padding:0.3cm 0.8cm 0.3cm 0.3cm;
 }
-body{ overflow-x:hidden;}
+  body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
 </style>

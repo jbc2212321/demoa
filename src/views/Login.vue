@@ -1,10 +1,9 @@
 <template xmlns:text-align="http://www.w3.org/1999/xhtml">
 
     <div id="Login">
+        <canvas id="canvas"></canvas>
+        <div class="mainbody">
         <!--        <canvas id="canvas"></canvas>-->
-        <br>
-        <br>
-        <br>
         <h1>登录</h1>
         <el-row>
             <el-col :span="6" :offset="9">
@@ -95,14 +94,11 @@
         <el-button type="primary" @click="resetPassword">提 交</el-button>
       </span>
         </el-dialog>
-
+        </div>
     </div>
 </template>
-<!--<script src="src/assets/js/canvas.js"></script>-->
 <script>
-  // import { draw, init } from '../assets/js/canvas'//注意路径
-  // import {     draw,init,Circle,currentCirle,canvas,circles,ctx,current_circle,w,h } from '../../static/js/canvas'//注意路径
-  // import '../assets/js/canvas.js'
+
   export default {
     name: 'Login',
     data () {
@@ -164,15 +160,15 @@
               message: '无该手机号！',
               type: 'error'
             })
-            this.form.tel=""
+            this.form.tel = ''
           } else {
             this.$message({
               showClose: true,
               message: '已向管理员发送请求！',
               type: 'success'
             })
-            this.form.tel=""
-            this.form.type=""
+            this.form.tel = ''
+            this.form.type = ''
             this.dialogVisible = false
           }
 
@@ -182,8 +178,8 @@
       handleClose (done) {
         this.$confirm('确认关闭？')
           .then(_ => {
-            this.form.tel=""
-            this.form.type=""
+            this.form.tel = ''
+            this.form.type = ''
             done()
           })
           .catch(_ => {
@@ -274,23 +270,25 @@
     }
   }
 </script>
+<style src="../assets/css/canvas.css" scoped>
+
+</style>
+
 <style scoped>
-    @import "../assets/css/canvas.css";
-
-
+/*@import "src/assets/css/canvas.css";*/
+/*@import "../assets/css/canvas.css";*/
     h1 {
         font-size: 40px;
         font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
         text-align: center;
-        padding: 1cm 1cm 0 0;
+        padding:1cm 0 0 0;
     }
 
-    body {
+   #Login{
         overflow-x: hidden;
         overflow-y: hidden;
     }
-</style>
-<style scoped>
+
     .el-dialog .el-dialog__body {
         display: flex;
         justify-content: center;
