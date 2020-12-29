@@ -4,46 +4,37 @@
   <div class="mainbody">
   <h1>注册</h1>
   <div id="layout">
-    <el-row>
-      <div class="tex"><el-col :span="2" :offset="8">用户名</el-col>
-      <el-col :span="6" :offset="0"><div><el-input placeholder="请输入用户名" minlength="2" maxlength="10" v-model="username" clearable></el-input></div></el-col>
-      </div>
-    </el-row>
-    <el-row>
-      <div class="tex"><el-col :span="2" :offset="8">手机号</el-col>
-      <el-col :span="6" :offset="0"><div ><el-input placeholder="请输入手机号" v-model="phoneNumber" clearable></el-input></div></el-col>
-      </div>
-    </el-row>
-    <el-row>
-      <div class="tex"><el-col :span="2" :offset="8">输入密码</el-col>
-      <el-col :span="6" :offset="0"><div ><el-input placeholder="请输入密码" minlength="6" maxlength="16" v-model="password" show-password></el-input></div></el-col>
-      </div>
-    </el-row>
+<!--    <div class="tex">-->
+    <el-form ref="form" label-width="80px">
+      <el-col :span="6"  :offset="9"><el-form-item label="用户名" required=“true”>
+        <el-input placeholder="请输入用户名" minlength="2" maxlength="10" v-model="username" clearable></el-input>
+      </el-form-item></el-col>
 
-    <el-row>
-      <div class="tex"><el-col :span="2" :offset="8">确认密码</el-col>
-      <el-col :span="6" :offset="0"><div ><el-input placeholder="请确认密码" minlength="6" maxlength="16" v-model="check_password" show-password></el-input></div></el-col>
-      </div>
-    </el-row>
+      <el-col :span="6"  :offset="9"><el-form-item label="手机号" required=“true”>
+        <el-input placeholder="请输入手机号" v-model="phoneNumber" clearable></el-input>
+      </el-form-item></el-col>
 
-    <el-row>
-      <div class="tex"><el-col :span="2" :offset="8">选择权限</el-col></div>
+      <el-col :span="6"  :offset="9"><el-form-item label="设置密码" required=“true”>
+        <el-input placeholder="请输入密码" minlength="6" maxlength="16" v-model="password" show-password></el-input>
+      </el-form-item></el-col>
 
-      <el-col :span="6" :offset="0"><div id="app6"><template>
+      <el-col :span="6"  :offset="9"><el-form-item label="确认密码" required=“true”>
+        <el-input placeholder="请确认密码" minlength="6" maxlength="16" v-model="check_password" show-password></el-input>
+      </el-form-item></el-col>
+
+      <el-col :span="6"  :offset="9"><el-form-item label="用户类型" required=“true”>
         <el-select v-model="value" placeholder="请选择账户类型">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
           </el-option>
         </el-select>
-      </template></div>
-      </el-col>
+      </el-form-item></el-col>
 
-    </el-row>
-
-    <br>
+    </el-form>
+<!--    </div>-->
         <el-col :span="10" :offset="10">
           <el-checkbox v-model="checked">我已认真阅读并同意用户协议</el-checkbox>
 </el-col>
@@ -184,14 +175,12 @@ h1{
   text-align: center;
   padding:1cm 0 0 0;
 }
-.tex{
-  font-size:15px;
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-  text-align: center;
-  padding:0.3cm 0.8cm 0.3cm 0.3cm;
-}
+
   body {
     overflow-x: hidden;
     overflow-y: hidden;
   }
+  /*.tex{*/
+  /*  padding: 0 0 0 400px;*/
+  /*}*/
 </style>

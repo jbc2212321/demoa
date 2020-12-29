@@ -81,7 +81,7 @@
             <el-col :span="20">
               <el-form-item label="账户类型" :label-width="formLabelWidth">
                 <el-select v-model="form.type" placeholder="请选择账户类型">
-                  <el-option label="病患" value="病患"></el-option>
+                  <el-option label="病人" value="病人"></el-option>
                   <el-option label="医师" value="医师"></el-option>
                   <el-option label="管理员" value="管理员"></el-option>
                 </el-select>

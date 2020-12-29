@@ -263,6 +263,8 @@
       <td width="200" colspan="3">{{tartar}}</td> <!-- 检测值 有无牙石 牙石数量从少到多由1-5表示 -->
     </tr>
 
+
+
 </table></span>
         </el-dialog>
         <!--口腔科体检报告单-->

@@ -373,12 +373,18 @@ const routes = [
   {
     path: '/',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: {
+      keepAlive: true,
+    }
   },
   {
     path: '/register',
     name: 'register',
-    component: Register
+    component: Register,
+    meta: {
+      keepAlive: true,
+    }
   },
   {
     path: '/chart',

@@ -48,29 +48,53 @@
 
     <el-container>
         <el-header>
-          <el-col :span="4">
-            <el-row :gutter="15">
-              <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-                <el-radio-button :label="false">展开</el-radio-button>
-                <el-radio-button :label="true">收起</el-radio-button>
-              </el-radio-group>
-            </el-row>
+          <el-col :span="1" >
+            <el-button size="medium" type="menu" @click="handleCollapse"><i class="el-icon-s-operation"></i></el-button>
           </el-col>
+          <el-col :span="23">
+            <el-dropdown
+                    size="medium"
+                    placement="bottom"
+                    trigger="click"
+                    @command="batchOperate"
+                    style="margin-left: 10px;">
+              <el-button type="info" size="medium" plain>
+                {{userName}}
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="loginout">
+                  <i class="el-icon-switch-button" ></i>
+                  登出</el-dropdown-item>
+                <el-dropdown-item command="change">
+                  <i class="el-icon-edit" circle></i>
+                  修改密码</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-col>
+<!--          <el-col :span="4">-->
+<!--            <el-row :gutter="15">-->
+<!--              <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">-->
+<!--                <el-radio-button :label="false">展开</el-radio-button>-->
+<!--                <el-radio-button :label="true">收起</el-radio-button>-->
+<!--              </el-radio-group>-->
+<!--            </el-row>-->
+<!--          </el-col>-->
 
-          <el-col :span="5" :offset="15">
-            <el-row :gutter="15">
-              <el-col :span="5">
-                <el-dropdown>
-                <span class="el-dropdown-link">
-                  {{userName}}<i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item ><el-button @click="outLogin">登出</el-button></el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </el-col>
-            </el-row>
-          </el-col>
+<!--          <el-col :span="5" :offset="15">-->
+<!--            <el-row :gutter="15">-->
+<!--              <el-col :span="5">-->
+<!--                <el-dropdown>-->
+<!--                <span class="el-dropdown-link">-->
+<!--                  {{userName}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
+<!--                </span>-->
+<!--                  <el-dropdown-menu slot="dropdown">-->
+<!--                    <el-dropdown-item ><el-button @click="outLogin">登出</el-button></el-dropdown-item>-->
+<!--                  </el-dropdown-menu>-->
+<!--                </el-dropdown>-->
+<!--              </el-col>-->
+<!--            </el-row>-->
+<!--          </el-col>-->
         </el-header>
 
 <!--        <el-main>Main</el-main>-->
@@ -78,6 +102,31 @@
       <el-footer><br><br><br>Copyright 发际线与我作队</el-footer>
     </el-container>
     </el-container>
+
+    <el-dialog
+            :visible.sync="changePassword"
+            width="33%"
+            :before-close="handleClose"
+            center>
+          <span>
+            <el-form ref="form"  label-width="80px">
+              <el-form-item label="当前密码" :required=true><el-col>
+                <el-input type="password" v-model="prevpw" placeholder="输入当前密码" minlength="6" maxlength="16"></el-input>
+              </el-col></el-form-item>
+
+                <el-form-item label="新密码" :required=true><el-col>
+                  <el-input type="password" v-model="newpw" placeholder="输入新密码" minlength="6" maxlength="16"></el-input>
+              </el-col></el-form-item>
+
+                <el-form-item label="确认密码" :required=true><el-col>
+                  <el-input type="password" v-model="conpw" placeholder="确认新密码" minlength="6" maxlength="16"></el-input>
+                </el-col></el-form-item>
+              </el-form>
+          </span>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="changePassword = false" type="primary">确认修改</el-button>
+              </span>
+    </el-dialog>
 
 
   </div>
@@ -90,7 +139,11 @@ export default {
   data(){
     return {
       isCollapse: true,
-      userName:""
+      userName:"",
+      prevpw: '',
+      newpw:'',
+      conpw:'',
+      changePassword: false,
     }
   },
   mounted () {
@@ -105,6 +158,97 @@ export default {
     })
   },
   methods: {
+    async modifyPassword () {
+      if (this.prevpw === '') {
+        this.$message({
+          showClose: true,
+          message: '密码不能为空！',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.prevpw.length < 6 || this.prevpw.length > 16) {
+        this.$message({
+          showClose: true,
+          message: '密码长度不正确！',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.newpw === '') {
+        this.$message({
+          showClose: true,
+          message: '新密码不能为空！',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.newpw.length < 6 || this.newpw.length > 16) {
+        this.$message({
+          showClose: true,
+          message: '新密码长度不正确！',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.newpw !== this.conpw) {
+        this.$message({
+          showClose: true,
+          message: '重复密码不正确！',
+          type: 'warning'
+        })
+        return
+      }
+      await this.$axios({
+        url: 'http://localhost:8096/checkPatientPassword',
+        method: 'post',
+        data: {
+          phone: this.$session.get('phone'),
+          password: this.prevpw
+        }
+      }).then(res => {
+        if (res.data) {
+          this.$axios({
+            url: 'http://localhost:8096/updatePatientPassword',
+            method: 'post',
+            data: {
+              phone: this.$session.get('phone'),
+              password: this.newpw
+            }
+          }).then(res => {
+            this.$message({
+              showClose: true,
+              message: '密码修改成功！',
+              type: 'success'
+            })
+            this.changePassword = false
+          })
+        } else {
+          this.$message({
+            showClose: true,
+            message: '密码不正确！',
+            type: 'error'
+          })
+          this.prevpw = ""
+
+        }
+      })
+
+    },
+    handleCollapse(){
+      if(this.isCollapse==true)this.isCollapse=false;
+      else if(this.isCollapse==false)this.isCollapse=true;
+    },
+    batchOperate(command) {
+      switch (command) {
+        case "loginout":
+          this.outLogin();
+          break;
+        case "change":
+          this.changePassword = true;
+          break;
+      }
+    },
   outLogin(){
     this.$axios({
       url:"http://localhost:8096/userLoginOut",
@@ -139,12 +283,13 @@ h3{
   color:#f0ebe7;
 }
 
-.el-header {
-  background-color: #ffffff;
-  color: #333;
-  text-align: center;
-  line-height: 20px;
-}
+  .el-header {
+    background-color:#F3F3F4;
+    color: #333;
+    text-align: right;
+    line-height: 20px;
+    padding: 10px 5px 0  0;
+  }
 
 .el-footer {
   background-color: #ffffff;
@@ -166,6 +311,23 @@ h3{
   text-align: center;
   line-height: 0;
 }
+
+  .el-button--menu {
+    color: #FFF !important;
+    background-color:#18A689;
+    border-color:rgba(255, 255, 255, 0);
+  }
+  .el-button--menu:focus{
+    color: #FFF !important;
+    background-color:#18A689;
+    border-color:rgba(255, 255, 255, 0);
+  }
+  .el-button--menu:active,
+  .el-button--menu:hover {
+    color: #FFF !important;
+    background-color:#22be9f;
+    border-color:rgba(255, 255, 255, 0);
+  }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
