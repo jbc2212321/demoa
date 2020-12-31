@@ -84,7 +84,7 @@
                        width="27%"
                        height="400px">
                 <el-form :model="form">
-                    <el-form-item label="绘制图表类型" >
+                    <el-form-item label="绘制图表类型">
                         <el-select v-model="form.type" placeholder="请选图表类型">
                             <el-option label="折线图" value="折线图"></el-option>
                             <el-option label="柱状图" value="柱状图"></el-option>
@@ -101,14 +101,14 @@
                        width="80%"
                        height="600px"
                        :before-close="handleCloseChart">
-                <ve-line :data="chartData" :settings="chartSettings" ></ve-line>
+                <ve-line :data="chartData" :settings="chartSettings"></ve-line>
             </el-dialog>
 
             <el-dialog title="图表" :visible.sync="isShowHistogram"
                        width="80%"
                        height="600px"
                        :before-close="handleCloseChart">
-                <ve-histogram :data="chartData" :settings="chartSettings" ></ve-histogram>
+                <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
             </el-dialog>
 
             <!-- 主界面 -->
@@ -218,6 +218,17 @@
       <td width="200" colspan="2">{{plt}}</td>   <!-- 检测值 -->
       <td width="100">100-300 10^9/L</td>
     </tr>
+        <tr height="50" style="text-align: center;">
+          <td width="100">
+       建议
+          </td>
+          <td width="500" colspan="5">
+              <p>{{proposal_plt}}</p>
+                <p>{{proposal_wbc}}</p>
+               <p>{{proposal_rbc}}</p>
+
+          </td>
+        </tr>
 
 </table></span>
         </el-dialog>
@@ -262,8 +273,21 @@
       <td width="150" colspan="2">牙石</td> <!-- tartar -->
       <td width="200" colspan="3">{{tartar}}</td> <!-- 检测值 有无牙石 牙石数量从少到多由1-5表示 -->
     </tr>
+    <tr height="50" style="text-align: center;">
+      <td width="100">
+   建议
+      </td>
+      <td width="500" colspan="5">
+          <p>  {{proposal_tartar}}</p>
+          <p>{{proposal_mobility}}</p>
+            <p> {{proposal_pain}}</p>
 
+      </td>
+    </tr>
 
+            <!--            {{proposal[proposal_tartar]}}-->
+            <!--            {{proposal[proposal_mobility]}}-->
+            <!--            {{proposal[proposal_pain]}}-->
 
 </table></span>
         </el-dialog>
@@ -306,6 +330,21 @@
     data () {
 
       return {
+
+        //医师建议
+        proposal_tartar: '',
+        proposal_mobility: '',
+        proposal_pain: '',
+
+        proposal_rbc: '',
+        proposal_wbc: '',
+        proposal_plt: '',
+        proposal: [{
+          '牙石': '叩痛：建议去医院做超声洁牙，必要时做牙周刮治，彻底去除牙结石，避免菌斑附着，才能彻底治愈。平时注意口腔卫生，早晚刷牙，饭后及时漱口，避免辛辣刺激的食物。',
+          '松动度': '松动：牙齿松动的原因可能是牙周炎，可以服用一些消炎药帮助消除炎症，炎症一旦消除牙齿松动的现象也就会有所缓解。',
+          '叩痛': '牙石：叩击酸痛可能是局部牙本质过敏，也可能是根尖存在炎症。建议先确诊一下病因。'
+
+        }],
         //病人信息
         patientName: '',
         sex: '',
@@ -367,7 +406,7 @@
         date2: '',
         min: '',
         max: '999',
-        tablename:"",
+        tablename: '',
         value0: '',//科室
         value1: [],//项目
         value2: '',//项目
@@ -379,23 +418,23 @@
         ToothVisible: false,
         dialogFormVisible: false,   //图表
         ChartVisible: false,
-        chartData:{       //数据
+        chartData: {       //数据
           columns: ['date'],
-          rows:[]
+          rows: []
         },
-        chartSettings : {
+        chartSettings: {
           labelMap: {
-            'date':"体检日期",
+            'date': '体检日期',
             'pain': '叩痛',
             'mobility': '松动度',
-            'tartar':"牙石",
+            'tartar': '牙石',
             'rbc': '红细胞',
             'wbc': '白细胞',
             'plt': '血小板',
           },
         },
-        isShowHistogram:false,
-        isShowLine:false,
+        isShowHistogram: false,
+        isShowLine: false,
         form: {
           type: ''
         },
@@ -547,18 +586,17 @@
             message: '提交成功！',
             type: 'success'
           })
-          if (this.tablename==="tooth"){
-            this.chartData["columns"].push("pain")
-            this.chartData["columns"].push("tartar")
-            this.chartData["columns"].push("mobility")
-          }else {
-            this.chartData["columns"].push("wbc")
-            this.chartData["columns"].push("rbc")
-            this.chartData["columns"].push("plt")
+          if (this.tablename === 'tooth') {
+            this.chartData['columns'].push('pain')
+            this.chartData['columns'].push('tartar')
+            this.chartData['columns'].push('mobility')
+          } else {
+            this.chartData['columns'].push('wbc')
+            this.chartData['columns'].push('rbc')
+            this.chartData['columns'].push('plt')
           }
           this.AllCase = res.data
           this.screenJson = []
-          // console.log(this.AllCase)
           this.dialogVisible = false
         })
       },
@@ -583,6 +621,12 @@
         this.$confirm('确认关闭？')
           .then(_ => {
             done()
+            this.proposal_pain = ''
+            this.proposal_mobility = ''
+            this.proposal_tartar = ''
+            this.proposal_plt = ''
+            this.proposal_rbc = ''
+            this.proposal_wbc = ''
           })
           .catch(_ => {
           })
@@ -598,8 +642,8 @@
         this.currentPage = val
       },
       handleEdit (value, row) {
-        console.log('this')
-        console.log(row)
+        // console.log('this')
+        // console.log(row)
         if (row['office'] === '血液科') {
           this.BloodVisible = true
           this.examinationDate = row['date']
@@ -607,13 +651,42 @@
           this.wbc = row['wbc']
           this.rbc = row['rbc']
           this.examinationNo = row['tableId']
+          if (row['plt'] < 100) {
+            this.proposal_plt = '血小板过低：注意休息不要熬夜，均衡饮食，适量运动，用点益血生，多吃红豆花生等。'
+          }
+          if (row['plt'] > 300) {
+            this.proposal_plt = '血小板过高：控制脂肪的摄入量，多补充水分，合理饮食，加强体育锻炼。'
+          }
+          if (row['wbc'] < 4) {
+            this.proposal_wbc = '白细胞过低：合理饮食，可以服用一些药物提升白细胞治疗，注意休息，适当锻炼。'
+          }
+          if (row['wbc'] > 10) {
+            this.proposal_wbc = '白细胞过高：注意多喝水，避免辛辣刺激食物，医院就诊，查找白细胞升高的原因，如为感染引起，区分是病毒感染或细菌感染，然后针对性治疗。'
+          }
+          if (row['rbc'] < 3.5) {
+            this.proposal_rbc = '红细胞过低：建议多吃瘦肉和猪肝、蛋黄、牛奶、鱼虾、贝类、大豆、豆腐和血补充铁和蛋白质，多吃蔬菜和水果补充维生素c促进铁的吸收，平常注意防止偏食。'
+          }
+          if (row['rbc'] > 5.5) {
+            this.proposal_rbc = '红细胞过高：在饮食上应注意低盐低脂，多食用高维生素食物;戒烟戒酒，忌食生冷辣性食物。'
+          }
         } else {
+
           this.ToothVisible = true
           this.examinationDate = row['date']
           this.pain = row['pain']
           this.tartar = row['tartar']
           this.mobility = row['mobility']
           this.examinationNo = row['tableId']
+          if (row['pain'] > 0) {
+            this.proposal_pain = '叩痛:叩击酸痛可能是局部牙本质过敏，也可能是根尖存在炎症。建议先确诊一下病因。'
+
+          }
+          if (row['tartar'] > 0) {
+            this.proposal_tartar = '牙石:建议去医院做超声洁牙，必要时做牙周刮治，彻底去除牙结石，避免菌斑附着，才能彻底治愈。平时注意口腔卫生，早晚刷牙，饭后及时漱口，避免辛辣刺激的食物。'
+          }
+          if (row['mobility'] > 0) {
+            this.proposal_mobility = '松动度:牙齿松动的原因可能是牙周炎，可以服用一些消炎药帮助消除炎症，炎症一旦消除牙齿松动的现象也就会有所缓解。'
+          }
         }
       },
       GeneratingCharts () {
@@ -623,12 +696,12 @@
             message: '暂无数据！',
             type: 'warning'
           })
-            return
+          return
         }
         this.dialogFormVisible = true
       },
-      showChart(){
-        if (this.form['type'].length===0){
+      showChart () {
+        if (this.form['type'].length === 0) {
           this.$message({
             showClose: true,
             message: '请选择图表类型！',
@@ -636,11 +709,11 @@
           })
           return
         }
-        this.chartData["rows"]=this.AllCase
-        if (this.form['type']==="柱状图"){
-          this.isShowHistogram=true
-        }else{
-          this.isShowLine=true
+        this.chartData['rows'] = this.AllCase
+        if (this.form['type'] === '柱状图') {
+          this.isShowHistogram = true
+        } else {
+          this.isShowLine = true
         }
         // console.log(this.chartData)
       },
@@ -650,11 +723,10 @@
           .then(_ => {
             // this.dialogFormVisible=false
             done()
-            if (this.isShowHistogram===true){
-              this.isShowHistogram=false
-            }
-            else if (this.isShowLine===true){
-              this.isShowLine=false
+            if (this.isShowHistogram === true) {
+              this.isShowHistogram = false
+            } else if (this.isShowLine === true) {
+              this.isShowLine = false
             }
           })
           .catch(_ => {

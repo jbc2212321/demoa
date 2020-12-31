@@ -261,6 +261,7 @@
             patientPhone: this.$session.get("phone"),
           }
         }).then(res=>{
+          console.log(res.data)
           if (res.data===0){
             this.$axios({
               url:"http://localhost:8096/insertPatientAppointment",

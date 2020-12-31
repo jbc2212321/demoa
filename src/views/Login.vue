@@ -125,6 +125,7 @@
       }
     },
     mounted () {
+      console.log(this.$store.state.identity)
     },
     methods: {
       resetPassword () {
