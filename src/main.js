@@ -9,12 +9,12 @@ import VCharts from 'v-charts'
 import Axios from 'axios'
 import VueSession from 'vue-session'
 import qs from 'qs'
-
+import Moment from 'moment'
 Vue.prototype.$axios = Axios
 Axios.defaults.baseURL = 'http://localhost:3000/api'
 Axios.defaults.headers.post['Content-Type'] = 'application/json';
-// axios.defaults.baseURL = 'http://localhost:3000';
 
+Vue.prototype.moment=Moment
 Vue.config.productionTip = false
 Vue.use(ElementUI).use(Select).use(Button).use(VueCookies).use(VCharts).use(Axios).use(VueSession).use(qs)
 new Vue({

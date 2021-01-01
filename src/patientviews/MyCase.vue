@@ -389,7 +389,22 @@
               date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
               picker.$emit('pick', date)
             }
-          }]
+          },
+            {
+              text: '半年前',
+              onClick (picker) {
+                const date = new Date()
+                date.setTime(date.getTime() - 15768000 * 1000)
+                picker.$emit('pick', date)
+              }
+            }, {
+              text: '一年前',
+              onClick (picker) {
+                const date = new Date()
+                date.setTime(date.getTime() - 31536000 * 1000)
+                picker.$emit('pick', date)
+              }
+            }]
         },
         AllCase: [],//筛选后的病例
         currentPage: 1,//默认开始页面
@@ -561,6 +576,16 @@
           })
           return
         }
+        if (this.moment(this.date1).format('YYYY-MM-DD HH:mm:ss') > this.moment(this.date2).format('YYYY-MM-DD HH:mm:ss')) {
+          this.$message({
+            showClose: true,
+            message: '日期不正确！',
+            type: 'warning'
+          })
+          this.date1 = ''
+          this.date2 = ''
+          return
+        }
         const name = this.value0
         if (name === '口腔科') {
           this.tablename = 'tooth'
@@ -642,8 +667,6 @@
         this.currentPage = val
       },
       handleEdit (value, row) {
-        // console.log('this')
-        // console.log(row)
         if (row['office'] === '血液科') {
           this.BloodVisible = true
           this.examinationDate = row['date']
@@ -715,13 +738,10 @@
         } else {
           this.isShowLine = true
         }
-        // console.log(this.chartData)
       },
       handleCloseChart (done) {
-        // console.log(this.chartData)
         this.$confirm('确认关闭？')
           .then(_ => {
-            // this.dialogFormVisible=false
             done()
             if (this.isShowHistogram === true) {
               this.isShowHistogram = false

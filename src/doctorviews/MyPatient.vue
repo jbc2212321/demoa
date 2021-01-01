@@ -299,14 +299,14 @@
                    width="80%"
                    height="600px"
                    :before-close="handleCloseChart">
-            <ve-line :data="chartData" :settings="chartSettings" ></ve-line>
+            <ve-line :data="chartData" :settings="chartSettings"></ve-line>
         </el-dialog>
 
         <el-dialog title="图表" :visible.sync="isShowHistogram"
                    width="80%"
                    height="600px"
                    :before-close="handleCloseChart">
-            <ve-histogram :data="chartData" :settings="chartSettings" ></ve-histogram>
+            <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
         </el-dialog>
     </div>
 </template>
@@ -336,12 +336,12 @@
         }],
         value: '',//科室
         //图表
-        patientNum:-1,
+        patientNum: -1,
         form: {
           type: '' //图表类型
         },
         //选择类型
-        chooseOffice:"",
+        chooseOffice: '',
         isShowHistogram: false,
         isShowLine: false,
         chartData: {       //数据
@@ -386,12 +386,12 @@
         date02: '',
         dialogFormVisible: false,
         ChartVisible: false,
-        chartSettings : {
+        chartSettings: {
           labelMap: {
-            'date':"体检日期",
+            'date': '体检日期',
             'pain': '叩痛',
             'mobility': '松动度',
-            'tartar':"牙石",
+            'tartar': '牙石',
             'rbc': '红细胞',
             'wbc': '白细胞',
             'plt': '血小板',
@@ -541,13 +541,25 @@
           })
       },
       //获取图表行信息
-      initChart(row){
+      initChart (row) {
         // console.log("行信息",row)
         this.dialogFormVisible = true
-        this.patientNum=row["num"]
+        this.patientNum = row['num']
       },
       //图表方法
       showChart () {
+        let date = new Date()
+
+        // console.log("起始日期:",this.moment(this.date01).format("YYYY-MM-DD HH:mm:ss"))
+        // console.log("终止日期:",this.date02)
+        if (this.chooseOffice === '') {
+          this.$message({
+            showClose: true,
+            message: '请选择科室！',
+            type: 'warning'
+          })
+          return
+        }
         if (this.form['type'].length === 0) {
           this.$message({
             showClose: true,
@@ -556,30 +568,47 @@
           })
           return
         }
-        // this.chartData['rows'] = this.AllCase
+        if (this.date01 === '' || this.date02 === '') {
+          this.$message({
+            showClose: true,
+            message: '请选择日期！',
+            type: 'warning'
+          })
+          return
+        }
+        if (this.moment(this.date01).format("YYYY-MM-DD HH:mm:ss") >this.moment(this.date02).format("YYYY-MM-DD HH:mm:ss") ) {
+          this.$message({
+            showClose: true,
+            message: '日期不正确！',
+            type: 'warning'
+          })
+          this.date01=""
+          this.date02=""
+          return
+        }
         this.$axios({
-          url:"http://localhost:8096/getDocsPatientsChart",
+          url: 'http://localhost:8096/getDocsPatientsChart',
           method: 'post',
           data: {
             doctorPhone: this.$session.get('phone'),
-            patientNum:this.patientNum,
-            type:this.chooseOffice,
-            date01:this.date01,
-            date02:this.date02
+            patientNum: this.patientNum,
+            type: this.chooseOffice,
+            date01: this.date01,
+            date02: this.date02
           }
-        }).then(res=>{
-          this.chartData["columns"]=['date']
-          if (this.chooseOffice==="血液科"){
-            this.chartData["columns"].push("wbc")
-            this.chartData["columns"].push("rbc")
-            this.chartData["columns"].push("plt")
-          }else {
-            this.chartData["columns"].push("pain")
-            this.chartData["columns"].push("tartar")
-            this.chartData["columns"].push("mobility")
+        }).then(res => {
+          this.chartData['columns'] = ['date']
+          if (this.chooseOffice === '血液科') {
+            this.chartData['columns'].push('wbc')
+            this.chartData['columns'].push('rbc')
+            this.chartData['columns'].push('plt')
+          } else {
+            this.chartData['columns'].push('pain')
+            this.chartData['columns'].push('tartar')
+            this.chartData['columns'].push('mobility')
           }
 
-          this.chartData["rows"]=res.data
+          this.chartData['rows'] = res.data
           if (this.form['type'] === '柱状图') {
             this.isShowHistogram = true
           } else {
@@ -587,7 +616,7 @@
           }
           // console.log("折线图:",this.isShowLine)
           // console.log("柱状图:",this.isShowHistogram)
-          console.log(this.chartData)
+          // console.log(this.chartData)
         })
 
       },
@@ -604,7 +633,9 @@
             } else if (this.isShowLine === true) {
               this.isShowLine = false
             }
+            this.chartData['columns'] = ['date']
             this.form['type'] = ''
+            this.chooseOffice = ''
             this.date01 = ''
             this.date02 = ''
           })

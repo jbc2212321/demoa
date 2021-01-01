@@ -8,7 +8,7 @@
                     placeholder="选择日期"
             >
             </el-date-picker>
-            <el-button @click="open" type="primary">提交筛选</el-button>
+            <el-button @click="chooseDate" type="primary">提交筛选</el-button>
 
             <el-table
                     ref="filterTable"
@@ -168,57 +168,29 @@
         }
       }
     },
-    //   computed:{
-    //     tableData:function () {
-    // return this.AllData.filter((i)=>{
-    //   if(this.filterList.length === 3){
-    //     return true
-    //   }
-    // })
-    //     },
-    //     PageData: function () {
-    //       return this.tableData.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
-    //     }
-    //   },
-    // computed: {
-    //   tableData: function () {
-    //
-    //     return  this.AllData.filter(item => {
-    //       // return item
-    //       console.log(this.filterList)
-    //       if (this.filterList.length === 0 || this.filterList.length === 3) {
-    //         console.log('0---------3')
-    //         console.log('allData', this.AllData)
-    //         return item
-    //       } else if (this.filterList.length === 1) {
-    //         console.log('1---------1')
-    //         if (item['account'] !== this.filterList[0]) {
-    //           return false
-    //         } else {
-    //           return item
-    //         }
-    //       } else if (this.filterList.length === 2) {
-    //         console.log('2---------2')
-    //         for (let i = 0; i < 2; i++) {
-    //           if (this.filterList[i] === item['account']) {
-    //             return item
-    //           }
-    //         }
-    //         return false
-    //       }
-    //       return item
-    //     })
-    //   },
-    //   PageData: function () {
-    //     console.log('tableData', this.tableData)
-    //     console.log("currentPage-1",this.currentPage-1)
-    //     console.log("pagesize",this.pagesize)
-    //     console.log("result:",this.tableData.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize))
-    //     return this.tableData.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize)
-    //   }
-    // },
-    //方便语音吗?
     methods: {
+      chooseDate () {
+        if (this.date === '') {
+          this.$message({
+            showClose: true,
+            message: '请先选择日期！',
+            type: 'warning'
+          })
+          return
+        }
+        this.$axios({
+          url: 'http://localhost:8096/getAllLogByDate',
+          method: 'post',
+          data: {
+            date: this.date
+          }
+        }).then(res => {
+          this.AllData = res.data
+          this.PageData = [...res.data]
+          this.currentPage = 1
+          this.pagesize = 8
+        })
+      },
       axios () {
         this.$axios({
           url: 'http://localhost:8096/getAllLog',
