@@ -95,7 +95,7 @@
               </el-form>
           </span>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="changePassword = false" type="primary">确认修改</el-button>
+              <el-button @click="modifyPassword" type="primary">确认修改</el-button>
               </span>
         </el-dialog>
     </div>
@@ -126,6 +126,17 @@
       })
     },
     methods: {
+      handleClose (done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.newpw=""
+            this.conpw=""
+            this.prevpw=""
+            done()
+          })
+          .catch(_ => {
+          })
+      },
       async modifyPassword () {
         if (this.prevpw === '') {
           this.$message({
