@@ -444,7 +444,7 @@
     },
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getDocsPatient',
+        url: 'getDocsPatient',
         method: 'post',
         headers: {
           'Content-Type': 'application/json; charset=UTF-8'
@@ -462,7 +462,7 @@
     methods: {
       LookPatient (row) {  //查看所有体检单
         this.$axios({
-          url: 'http://localhost:8096/getDocsPatientsRecord',
+          url: 'getDocsPatientsRecord',
           method: 'post',
           data: {
             doctorPhone: this.$session.get('phone'),
@@ -478,7 +478,7 @@
       },
       LookRecord (row) {  //查看体检单号对应的病人信息
         this.$axios({
-          url: 'http://localhost:8096/getDocsPatientsRecordDetail',
+          url: 'getDocsPatientsRecordDetail',
           method: 'post',
           data: {
             tableID: row['num'],
@@ -587,7 +587,7 @@
           return
         }
         this.$axios({
-          url: 'http://localhost:8096/getDocsPatientsChart',
+          url: 'getDocsPatientsChart',
           method: 'post',
           data: {
             doctorPhone: this.$session.get('phone'),

@@ -182,7 +182,7 @@
     },
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getRelationship',
+        url: 'getRelationship',
         method: 'post',
         data: {
           PatientPhone: this.$session.get('phone')
@@ -198,7 +198,7 @@
       })
 
       this.$axios({
-        url:"http://localhost:8096/getPatientsAppointment",
+        url:"getPatientsAppointment",
         method:"post",
         data:{
           patientPhone:this.$session.get("phone")
@@ -254,7 +254,7 @@
         }
 
         this.$axios({
-          url:"http://localhost:8096/getPatientsAppointmentSingle",
+          url:"getPatientsAppointmentSingle",
           method: "post",
           data:{
             doctorPhone:this.doctorPhone,
@@ -264,7 +264,7 @@
           console.log(res.data)
           if (res.data===0){
             this.$axios({
-              url:"http://localhost:8096/insertPatientAppointment",
+              url:"insertPatientAppointment",
               method: "post",
               data:{
                 doctorPhone:this.doctorPhone,
@@ -303,7 +303,7 @@
           type: 'warning'
         }).then(async () => {
               await this.$axios({
-                url: 'http://localhost:8096/deletePatientsAppointment',
+                url: 'deletePatientsAppointment',
                 method: 'post',
                 data: {
                   num: row['num'],
@@ -327,7 +327,7 @@
       },
       updateDate(){
         this.$axios({
-          url:"http://localhost:8096/getPatientsAppointment",
+          url:"getPatientsAppointment",
           method:"post",
           data:{
             patientPhone:this.$session.get("phone")

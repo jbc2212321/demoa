@@ -157,7 +157,7 @@
     },
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getDocDetail',
+        url: 'getDocDetail',
         method: 'post',
         data: {
           DoctorPhone: this.$session.get('phone')
@@ -201,7 +201,7 @@
       onSubmit () {
         console.log(this.sex)
         this.$axios({
-          url: 'http://localhost:8096/updateDocDetail',
+          url: 'updateDocDetail',
           method: 'post',
           data: {
             DoctorPhone: this.$session.get('phone'),

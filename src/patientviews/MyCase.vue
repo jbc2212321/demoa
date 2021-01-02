@@ -475,7 +475,7 @@
     },
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getPatientDetail',
+        url: 'getPatientDetail',
         method: 'post',
         data: {
           phone: this.$session.get('phone')
@@ -593,7 +593,7 @@
           this.tablename = 'blood'
         }
         this.$axios({
-          url: 'http://localhost:8096/selectPatientCase',
+          url: 'selectPatientCase',
           method: 'post',
           headers: {
             'Content-Type': 'application/json; charset=UTF-8'

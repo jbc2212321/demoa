@@ -236,7 +236,7 @@
     mounted () {
       //初始化医生列表
       this.$axios({
-        url: 'http://localhost:8096/getAllDoc',
+        url: 'getAllDoc',
         method: 'get',
       }).then(res => {
         this.DocList = res.data
@@ -244,7 +244,7 @@
 
       //初始化选择列表
       this.$axios({
-        url: 'http://localhost:8096/getRelationship',
+        url: 'getRelationship',
         method: 'post',
         data: {
           PatientPhone: this.$session.get('phone')
@@ -274,7 +274,7 @@
             done()
             this.checked = []
             this.$axios({
-              url: 'http://localhost:8096/getAllDoc',
+              url: 'getAllDoc',
               method: 'get',
             }).then(res => {
               this.DocList = res.data
@@ -370,7 +370,7 @@
           return false
         } else {
           this.$axios({
-            url: 'http://localhost:8096/addDoctorAndPermission',
+            url: 'addDoctorAndPermission',
             method: 'post',
             data: {
               PatientPhone: this.$session.get('phone'),
@@ -383,7 +383,7 @@
               type: 'success'
             })
             this.$axios({
-              url: 'http://localhost:8096/getRelationship',
+              url: 'getRelationship',
               method: 'post',
               data: {
                 PatientPhone: this.$session.get('phone')
@@ -393,7 +393,7 @@
               this.checked = []
               this.dialogVisible = false
               this.$axios({
-                url: 'http://localhost:8096/getAllDoc',
+                url: 'getAllDoc',
                 method: 'get',
               }).then(res => {
                 this.DocList = res.data
@@ -413,7 +413,7 @@
         this.editVisible = true
         this.editDoctorPhone = row['tel']
         this.$axios({
-          url: 'http://localhost:8096/getPatientRelationship',
+          url: 'getPatientRelationship',
           method: 'post',
           data: {
             DoctorPhone: this.editDoctorPhone,
@@ -443,7 +443,7 @@
       choosePermission () {
         // console.log("checklist2:",this.checkList)
         this.$axios({
-          url: 'http://localhost:8096/updateRelationship',
+          url: 'updateRelationship',
           method: 'post',
           data: {
             DoctorPhone: this.editDoctorPhone,
@@ -457,7 +457,7 @@
             type: 'success'
           })
           this.$axios({
-            url: 'http://localhost:8096/getPatientRelationship',
+            url: 'getPatientRelationship',
             method: 'post',
             data: {
               DoctorPhone: this.editDoctorPhone,
@@ -490,7 +490,7 @@
           type: 'warning'
         }).then(() => {
             this.$axios({
-              url:"http://localhost:8096/sendDeleteDoctor",
+              url:"sendDeleteDoctor",
               method:"post",
               data:{
                     doctorPhone: row['tel'],
@@ -500,7 +500,7 @@
               row["state"]=0
             })
           // this.$axios({
-          //   url: 'http://localhost:8096/deleteRelationship',
+          //   url: 'deleteRelationship',
           //   method: 'post',
           //   data: {
           //     DoctorPhone: row['tel'],
@@ -508,7 +508,7 @@
           //   }
           // }).then(res => {
           //   this.$axios({
-          //     url: 'http://localhost:8096/getRelationship',
+          //     url: 'getRelationship',
           //     method: 'post',
           //     data: {
           //       PatientPhone: this.$session.get('phone')

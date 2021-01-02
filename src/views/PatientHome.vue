@@ -148,7 +148,7 @@ export default {
   },
   mounted () {
     this.$axios({
-      url:"http://localhost:8096/getPatientName",
+      url:"getPatientName",
       method:"post",
       data:{
         phone:this.$session.get("phone")
@@ -211,7 +211,7 @@ export default {
         return
       }
       await this.$axios({
-        url: 'http://localhost:8096/checkPatientPassword',
+        url: 'checkPatientPassword',
         method: 'post',
         data: {
           phone: this.$session.get('phone'),
@@ -220,7 +220,7 @@ export default {
       }).then(res => {
         if (res.data) {
           this.$axios({
-            url: 'http://localhost:8096/updatePatientPassword',
+            url: 'updatePatientPassword',
             method: 'post',
             data: {
               phone: this.$session.get('phone'),
@@ -262,7 +262,7 @@ export default {
     },
   outLogin(){
     this.$axios({
-      url:"http://localhost:8096/userLoginOut",
+      url:"userLoginOut",
       method:"post",
       data:{
         phone:this.$session.get("phone"),

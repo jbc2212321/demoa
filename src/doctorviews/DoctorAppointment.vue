@@ -75,7 +75,7 @@
     computed: {},
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getDocsAppointment',
+        url: 'getDocsAppointment',
         method: 'post',
         data: {
           phone: this.$session.get('phone')
@@ -91,7 +91,7 @@
         const btime = row['time'].split(' ')[1].split('-')[0]
         const etime = row['time'].split(' ')[1].split('-')[1]
         this.$axios({
-          url: 'http://localhost:8096/checkDocsAppointment',
+          url: 'checkDocsAppointment',
           method: 'post',
           data: {
             appointmentNo: row['num'],
@@ -110,7 +110,7 @@
         const etime = row['time'].split(' ')[1].split('-')[1]
         if (row['choose'] === 0 || row['choose'] === 2) {
           this.$axios({
-            url: 'http://localhost:8096/checkDocsAppointment',
+            url: 'checkDocsAppointment',
             method: 'post',
             data: {
               appointmentNo: row['num'],
@@ -128,7 +128,7 @@
               return false
             } else {
               await this.$axios({
-                url: 'http://localhost:8096/setDocsAppointment',
+                url: 'setDocsAppointment',
                 method: 'post',
                 data: {
                   num: row['num'],
@@ -165,7 +165,7 @@
           switch (row['choose']) {
             case 0:
               await this.$axios({
-                url: 'http://localhost:8096/setDocsAppointment',
+                url: 'setDocsAppointment',
                 method: 'post',
                 data: {
                   num: row['num'],
@@ -182,7 +182,7 @@
               break
             case 1:
               await this.$axios({
-                url: 'http://localhost:8096/setDocsAppointment',
+                url: 'setDocsAppointment',
                 method: 'post',
                 data: {
                   num: row['num'],

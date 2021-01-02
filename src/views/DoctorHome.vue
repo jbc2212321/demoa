@@ -116,7 +116,7 @@
     name: 'DoctorHome',
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getDoctorName',
+        url: 'getDoctorName',
         method: 'post',
         data: {
           phone: this.$session.get('phone')
@@ -179,7 +179,7 @@
           return
         }
         await this.$axios({
-          url: 'http://localhost:8096/checkDoctorPassword',
+          url: 'checkDoctorPassword',
           method: 'post',
           data: {
             phone: this.$session.get('phone'),
@@ -188,7 +188,7 @@
         }).then(res => {
           if (res.data) {
             this.$axios({
-              url: 'http://localhost:8096/updateDoctorPassword',
+              url: 'updateDoctorPassword',
               method: 'post',
               data: {
                 phone: this.$session.get('phone'),
@@ -230,7 +230,7 @@
       },
       outLogin () {
         this.$axios({
-          url:"http://localhost:8096/userLoginOut",
+          url:"userLoginOut",
           method:"post",
           data:{
             phone:this.$session.get("phone"),

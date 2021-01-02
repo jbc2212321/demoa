@@ -147,7 +147,7 @@
           return
         }
         this.$axios({
-          url: 'http://localhost:8096/sendResetPassword',
+          url: 'sendResetPassword',
           method: 'post',
           data: {
             phone: this.form.tel,
@@ -212,7 +212,7 @@
           return
         }
         this.$axios({
-          url: 'http://localhost:8096/checkUser',
+          url: 'checkUser',
           method: 'post',
           data: {
             phone: this.username,

@@ -56,7 +56,7 @@
     },
     mounted () {
         this.$axios({
-          url:"http://localhost:8096/getPatientDetail",
+          url:"getPatientDetail",
           method:"post",
           data:{
             phone:this.$session.get("phone")
@@ -74,7 +74,7 @@
     methods: {
       onSubmit() {
         this.$axios({
-          url:"http://localhost:8096/updatePatientDetail",
+          url:"updatePatientDetail",
           method:"post",
           data:{
             patientID: this.patientID,

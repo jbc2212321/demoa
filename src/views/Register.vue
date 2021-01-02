@@ -127,7 +127,7 @@ name: "Register",
         return;
       }
       this.$axios({
-        url: "http://localhost:8096/addUser",
+        url: "addUser",
         method: "post",
         data:{
           username:this.username,

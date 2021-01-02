@@ -179,7 +179,7 @@
           return
         }
         this.$axios({
-          url: 'http://localhost:8096/getAllLogByDate',
+          url: 'getAllLogByDate',
           method: 'post',
           data: {
             date: this.date
@@ -193,7 +193,7 @@
       },
       axios () {
         this.$axios({
-          url: 'http://localhost:8096/getAllLog',
+          url: 'getAllLog',
           method: 'get'
         }).then(res => {
           this.AllData = res.data
@@ -220,14 +220,14 @@
           type: 'warning'
         }).then(() => {
           this.$axios({
-            url: 'http://localhost:8096/deleteLogByNum',
+            url: 'deleteLogByNum',
             method: 'post',
             data: {
               num: row['num']
             }
           }).then(res => {
             this.$axios({
-              url: 'http://localhost:8096/getAllLog',
+              url: 'getAllLog',
               method: 'get'
             }).then(res => {
               this.AllData = res.data

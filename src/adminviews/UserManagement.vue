@@ -237,7 +237,7 @@
     },
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getAllDocAndPatient',
+        url: 'getAllDocAndPatient',
         method: 'get',
       }).then(res => {
         this.AllAccount = res.data
@@ -250,7 +250,7 @@
       },
       lookRow (index, tableData) {
         this.$axios({
-          url: 'http://localhost:8096/getInformationDocOrPatient',
+          url: 'getInformationDocOrPatient',
           method: 'post',
           data: {
             phone: tableData[index]['tel'],
@@ -296,7 +296,7 @@
           type: 'warning'
         }).then(() => {
           this.$axios({
-            url: 'http://localhost:8096/deleteDocOrPatient',
+            url: 'deleteDocOrPatient',
             method: 'post',
             data: {
               phone: tableData[index]['tel'],
@@ -304,7 +304,7 @@
             }
           }).then(res => {
             this.$axios({
-              url: 'http://localhost:8096/getAllDocAndPatient',
+              url: 'getAllDocAndPatient',
               method: 'get',
             }).then(res => {
               this.AllAccount = res.data

@@ -130,7 +130,7 @@
     },
     mounted () {
       this.$axios({
-        url: 'http://localhost:8096/getAdminName',
+        url: 'getAdminName',
         method: 'post',
         data: {
           phone: this.$session.get('phone')
@@ -182,7 +182,7 @@
           return
         }
         await this.$axios({
-          url: 'http://localhost:8096/checkAdminPassword',
+          url: 'checkAdminPassword',
           method: 'post',
           data: {
             phone: this.$session.get('phone'),
@@ -191,7 +191,7 @@
         }).then(res => {
           if (res.data) {
             this.$axios({
-              url: 'http://localhost:8096/updateAdminPassword',
+              url: 'updateAdminPassword',
               method: 'post',
               data: {
                 phone: this.$session.get('phone'),
@@ -234,7 +234,7 @@
       },
       outLogin () {
         this.$axios({
-          url: 'http://localhost:8096/userLoginOut',
+          url: 'userLoginOut',
           method: 'post',
           data: {
             phone: this.$session.get('phone'),

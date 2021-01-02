@@ -209,13 +209,13 @@
     },
     mounted: function () {
       this.$axios({
-        url: 'http://localhost:8096/getTodoListReset',
+        url: 'getTodoListReset',
         method: 'get',
       }).then(res => {
         this.resetData = res.data
       })
       this.$axios({
-        url: 'http://localhost:8096/getTodoListDelete',
+        url: 'getTodoListDelete',
         method: 'get',
       }).then(res => {
         this.deleteData = res.data
@@ -229,7 +229,7 @@
           type: 'warning'
         }).then(() => {
           this.$axios({
-            url: 'http://localhost:8096/updateTodoList',
+            url: 'updateTodoList',
             method: 'post',
             data: {
               num: row.num,
@@ -240,7 +240,7 @@
             }
           }).then(res => {
             this.$axios({
-              url: 'http://localhost:8096/getTodoListReset',
+              url: 'getTodoListReset',
               method: 'get',
             }).then(res => {
               this.resetData = res.data
@@ -264,7 +264,7 @@
           type: 'warning'
         }).then(() => {
           this.$axios({
-            url: 'http://localhost:8096/updateTodoList',
+            url: 'updateTodoList',
             method: 'post',
             data: {
               num: row.num,
@@ -275,7 +275,7 @@
             }
           }).then(res => {
             this.$axios({
-              url: 'http://localhost:8096/getTodoListReset',
+              url: 'getTodoListReset',
               method: 'get',
             }).then(res => {
               this.resetData = res.data
@@ -299,7 +299,7 @@
           type: 'warning'
         }).then(() => {
           this.$axios({
-            url: 'http://localhost:8096/updateTodoList',
+            url: 'updateTodoList',
             method: 'post',
             data: {
               num: row.num,
@@ -311,7 +311,7 @@
             }
           }).then(res => {
             this.$axios({
-              url: 'http://localhost:8096/getTodoListDelete',
+              url: 'getTodoListDelete',
               method: 'get',
             }).then(res => {
               this.deleteData = res.data
@@ -335,7 +335,7 @@
           type: 'warning'
         }).then(() => {
           this.$axios({
-            url: 'http://localhost:8096/updateTodoList',
+            url: 'updateTodoList',
             method: 'post',
             data: {
               num: row.num,
@@ -347,7 +347,7 @@
             }
           }).then(res => {
             this.$axios({
-              url: 'http://localhost:8096/getTodoListDelete',
+              url: 'getTodoListDelete',
               method: 'get',
             }).then(res => {
               this.deleteData = res.data

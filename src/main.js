@@ -11,7 +11,7 @@ import VueSession from 'vue-session'
 import qs from 'qs'
 import Moment from 'moment'
 Vue.prototype.$axios = Axios
-Axios.defaults.baseURL = 'http://localhost:3000/api'
+Axios.defaults.baseURL = 'http://localhost:8096/'
 Axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 Vue.prototype.moment=Moment
