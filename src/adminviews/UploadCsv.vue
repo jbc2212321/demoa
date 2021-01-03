@@ -14,23 +14,17 @@
         <br><br>
         <el-upload
                 class="upload-demo"
-                action="uploadFile"
+                action="http://localhost:8096/uploadFile"
                 accept=".csv"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :on-success="handle_success"
-                :before-remove="beforeRemove"
                 :show-file-list="false"
                 :beforeUpload="beforeAvatarUpload"
                 :on-exceed="handleExceed">
-
-            <!--            <el-button size="small" type="primary" @click="beforeUpload" >点击上传</el-button>-->
-            <!--            <div slot="tip" class="el-upload__tip">只能上传csv文件</div>-->
             <el-button id="initSlide" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传csv文件</div>
         </el-upload>
-
-        <!--        <input type="file" accept="*.csv">上传-->
 
 
     </div>
@@ -72,7 +66,6 @@
         return isLt2M
       },
       handle_success (res) {
-        // console.log("返回值",res)
         if (res === '命名不正确') {
           this.$message({
             showClose: true,
@@ -93,40 +86,15 @@
           })
         }
       },
-      judge () {
-        if (this.value0 === '') {
-          this.$message({
-            showClose: true,
-            message: '请选择科室！',
-            type: 'warning'
-          })
-          return false
-        }
-      },
-      async beforeUpload () {
-        if (this.value0 === '') {
-          this.$message({
-            showClose: true,
-            message: '请选择科室！',
-            type: 'warning'
-          })
-
-        }
-
-      },
       handleRemove (file, fileList) {
         console.log(file, fileList)
       },
       handlePreview (file) {
-
         console.log(file)
       },
       handleExceed (files, fileList) {
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
       },
-      beforeRemove (file, fileList) {
-        return this.$confirm(`确定移除 ${file.name}？`)
-      }
     }
   }
 </script>
