@@ -115,7 +115,10 @@
               </el-col></el-form-item>
 
                 <el-form-item label="新密码" :required=true><el-col>
-                  <el-input type="password" v-model="newpw" placeholder="输入新密码" minlength="6" maxlength="16"></el-input>
+                    <el-tooltip class="item" effect="dark" content="密码必须包含字母、数字、特殊符号" placement="top-start">
+                        <el-input type="password" v-model="newpw" placeholder="输入新密码" minlength="6" maxlength="16"></el-input>
+                    </el-tooltip>
+
               </el-col></el-form-item>
 
                 <el-form-item label="确认密码" :required=true><el-col>
@@ -201,6 +204,15 @@ export default {
           type: 'warning'
         })
         return
+      }
+      var reg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,16}$/
+      var flag = reg.test(this.newpw)
+      if (flag === false) {
+        this.$message({
+          type: 'error',
+          message: '新密码必须由 6-16位字母、数字、特殊符号组成!'
+        })
+        return false
       }
       if (this.newpw !== this.conpw) {
         this.$message({
