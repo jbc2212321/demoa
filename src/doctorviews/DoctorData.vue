@@ -173,10 +173,10 @@
         this.phoneNo = this.$session.get('phone') //这里为什么出错
         this.address = res.data['address']
         this.birthday = res.data['birthday']
-        if (res.data['sex'] === 'F') {
-          this.sex = '男性'
-        } else if (res.data['sex'] === 'M') {
+        if (res.data['sex'] === 'f') {
           this.sex = '女性'
+        } else if (res.data['sex'] === 'm') {
+          this.sex = '男性'
         } else {
           this.sex = ''
         }
@@ -199,7 +199,18 @@
     },
     methods: {
       onSubmit () {
-        console.log(this.sex)
+        // console.log(this.sex)
+        // console.log("科室id:",this.departmentNo)
+        var department;
+        if(this.departmentNo==="血液科"){
+          department=1
+        }else if(this.departmentNo==="口腔科"){
+          department=2
+        }else if(this.departmentNo===""){
+
+        }else{
+          department=Number(this.departmentNo)
+        }
         this.$axios({
           url: 'updateDocDetail',
           method: 'post',
@@ -211,7 +222,7 @@
             nation: this.nation,
             college: this.college,
             address: this.address,
-            departmentNo: Number(this.departmentNo),
+            departmentNo: department,
             expertise: this.expertise,    //擅长领域
             works: this.works,        //相关著作
             introduction: this.introduction,     //个人简介
