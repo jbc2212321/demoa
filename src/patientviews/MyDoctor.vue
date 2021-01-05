@@ -489,16 +489,24 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            this.$axios({
-              url:"sendDeleteDoctor",
-              method:"post",
-              data:{
-                    doctorPhone: row['tel'],
-                    patientPhone: this.$session.get('phone'),
-              }
-            }).then(res=>{
-              row["state"]=0
+          if (row['state'] === 0) {
+            this.$message({
+              showClose: true,
+              message: '已提交筛选！',
+              type: 'warning'
             })
+            return
+          }
+          this.$axios({
+            url: 'sendDeleteDoctor',
+            method: 'post',
+            data: {
+              doctorPhone: row['tel'],
+              patientPhone: this.$session.get('phone'),
+            }
+          }).then(res => {
+            row['state'] = 0
+          })
           // this.$axios({
           //   url: 'deleteRelationship',
           //   method: 'post',
