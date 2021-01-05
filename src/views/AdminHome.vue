@@ -97,7 +97,7 @@
               </el-col></el-form-item>
 
                 <el-form-item label="新密码" :required=true><el-col>
-                    <el-tooltip class="item" effect="dark" content="密码必须包含字母、数字、特殊符号" placement="top-start">
+                    <el-tooltip class="item" effect="dark" content="新密码必须包含字母、数字、特殊符号且长度在6-16之间" placement="top-start">
                         <el-input type="password" v-model="newpw" placeholder="输入新密码" minlength="6" maxlength="16"></el-input>
                     </el-tooltip>
               </el-col></el-form-item>
@@ -181,6 +181,14 @@
           this.$message({
             type: 'error',
             message: '新密码必须由 6-16位字母、数字、特殊符号组成!'
+          })
+          return false
+        }
+        var reg2 =/[\u4E00-\u9FA5\uF900-\uFA2D]/
+        if (!reg2.test(this.newpw)){
+          this.$message({
+            type: 'error',
+            message: '密码不能有中文!'
           })
           return false
         }

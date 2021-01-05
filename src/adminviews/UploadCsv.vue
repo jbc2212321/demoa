@@ -14,7 +14,7 @@
         <br><br>
         <el-upload
                 class="upload-demo"
-                action="http://localhost:8096/uploadFile"
+                action="http://115.157.200.157:8096/uploadFile"
                 accept=".csv"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
