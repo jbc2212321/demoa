@@ -78,6 +78,12 @@
             message: '表名与csv内容冲突！',
             type: 'error'
           })
+        } else if (res === '内容不合法') {
+          this.$message({
+            showClose: true,
+            message: '内容不合法！',
+            type: 'error'
+          })
         } else if (res === '上传成功') {
           this.$message({
             showClose: true,
@@ -85,7 +91,7 @@
             type: 'success'
           })
         }
-      } ,
+      },
       handleRemove (file, fileList) {
         console.log(file, fileList)
       },
