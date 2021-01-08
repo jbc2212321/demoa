@@ -215,7 +215,7 @@ export default {
         return false
       }
       var reg2 =/[\u4E00-\u9FA5\uF900-\uFA2D]/
-      if (!reg2.test(this.newpw)){
+      if (reg2.test(this.newpw)){
         this.$message({
           type: 'error',
           message: '密码不能有中文!'

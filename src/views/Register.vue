@@ -7,21 +7,21 @@
                 <!--    <div class="tex">-->
                 <el-form ref="form" label-width="80px">
                     <el-col :span="6" :offset="9">
-                        <el-form-item label="用户名" required=“true”>
+                        <el-form-item label="用户名" :required="true">
                             <el-input placeholder="请输入用户名" minlength="2" maxlength="10" v-model="username"
                                       clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="6" :offset="9">
-                        <el-form-item label="手机号" required=“true”>
+                        <el-form-item label="手机号" :required="true">
                             <el-input placeholder="请输入手机号" v-model="phoneNumber" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
 
                     <el-col :span="6" :offset="9">
-                        <el-form-item label="设置密码" required=“true”>
+                        <el-form-item label="设置密码" :required="true">
                             <el-tooltip class="item" effect="dark" content="密码必须包含字母、数字、特殊符号且长度在6-16之间" placement="top-start">
                                 <el-input placeholder="请输入密码" minlength="6" maxlength="16" v-model="password"
                                           show-password></el-input>
@@ -30,14 +30,14 @@
                     </el-col>
 
                     <el-col :span="6" :offset="9">
-                        <el-form-item label="确认密码" required=“true”>
+                        <el-form-item label="确认密码" :required="true">
                             <el-input placeholder="请确认密码" minlength="6" maxlength="16" v-model="check_password"
                                       show-password></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="6" :offset="9">
-                        <el-form-item label="用户类型" required=“true”>
+                        <el-form-item label="用户类型" :required="true">
                             <el-select v-model="value" placeholder="请选择账户类型">
                                 <el-option
                                         v-for="item in options"
@@ -133,7 +133,7 @@
           return false
         }
         var reg2 =/[\u4E00-\u9FA5\uF900-\uFA2D]/
-        if (!reg2.test(this.password)){
+        if (reg2.test(this.password)){
           this.$message({
             type: 'error',
             message: '密码不能有中文!'
