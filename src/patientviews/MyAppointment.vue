@@ -205,7 +205,7 @@
         }
       }).then(res=>{
         this.tableData=res.data
-        console.log("tableData:"+res.data)
+        // console.log("tableData:"+res.data)
       })
     },
     methods: {

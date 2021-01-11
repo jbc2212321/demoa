@@ -170,7 +170,7 @@
         <td width="100">性别</td>
         <td width="100">{{sex}}</td>
         <td width="100">体检日期</td>
-        <td width="100">2020/11/30</td>
+        <td width="100">{{examinationDate}}</td>
     </tr>
     <tr height="50" style="text-align: center;">
       <td width="100">代号</td>
@@ -220,8 +220,8 @@
         <td width="100">{{patientName}}</td>
         <td width="100">性别</td>
         <td width="100">{{sex}}</td>
+        <td width="100">体检日期</td>
         <td width="100">{{examinationDate}}</td>
-        <td width="100">2020/11/30</td>
     </tr>
     <tr height="50" style="text-align: center;">
       <td width="50" td rowspan="4">口腔</td>

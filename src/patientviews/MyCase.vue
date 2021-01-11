@@ -133,7 +133,7 @@
                         width="180">
                     <template slot-scope="scope">
                         <el-tag
-                                :type="scope.row.office === 'tooth' ? 'primary' : 'success'"
+                                :type="scope.row.office === '口腔科' ? 'primary' : 'success'"
                                 disable-transitions>{{scope.row.office}}
                         </el-tag>
                     </template>

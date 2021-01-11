@@ -81,7 +81,7 @@
             paccountNo: this.paccountNo,
             patientName: this.patientName,
             phoneNo: this.$session.get("phone"),
-            birthday: this.birthday,
+            birthday: this.moment(this.birthday).format('YYYY-MM-DD'),
             sex: this.sex,
           }
         }).then(res=>{

@@ -132,7 +132,7 @@
           })
           return false
         }
-        var reg2 =/[\u4E00-\u9FA5\uF900-\uFA2D]/
+        const reg2 = /[\u4E00-\u9FA5\uF900-\uFA2D]/
         if (reg2.test(this.password)){
           this.$message({
             type: 'error',

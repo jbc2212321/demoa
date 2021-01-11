@@ -199,25 +199,125 @@
     },
     methods: {
       onSubmit () {
-        // console.log(this.sex)
-        // console.log("科室id:",this.departmentNo)
         var department;
         if(this.departmentNo==="血液科"){
           department=1
         }else if(this.departmentNo==="口腔科"){
           department=2
         }else if(this.departmentNo===""){
-
         }else{
           department=Number(this.departmentNo)
         }
+
+
+        if (this.nationality!== null && this.nationality !== undefined) {
+          if(this.nationality.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.nation!== null && this.nation !== undefined) {
+          if(this.nation.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.college!== null && this.college !== undefined) {
+          if(this.college.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.address!== null && this.address !== undefined) {
+          if(this.address.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.expertise!== null && this.expertise !== undefined) {
+          if(this.expertise.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.works!== null && this.works !== undefined) {
+          if(this.works.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.introduction!== null && this.introduction !== undefined) {
+          if(this.introduction.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.achievements!== null && this.achievements !== undefined) {
+          if(this.achievements.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.evaluation!== null && this.evaluation !== undefined) {
+          if(this.evaluation.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+        if (this.nativePlace!== null && this.nativePlace !== undefined) {
+          if(this.nativePlace.length>100){
+            this.$message({
+              showClose: true,
+              message: '文本内容过长！',
+              type: 'warning'
+            })
+            return
+          }
+        }
+
         this.$axios({
           url: 'updateDocDetail',
           method: 'post',
           data: {
             DoctorPhone: this.$session.get('phone'),
             sex: this.sex,
-            birthday: this.birthday,
+            birthday: this.moment(this.birthday).format('YYYY-MM-DD') ,
             nationality: this.nationality,
             nation: this.nation,
             college: this.college,

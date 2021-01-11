@@ -261,12 +261,18 @@
             this.doctorName = res.data['doctorName']
             this.evaluation = res.data['evaluation']
             this.doctorID = res.data['doctorID']
-            this.departmentNO = res.data['departmentNO']
+            this.departmentNO = res.data['departmentNo']
             this.daccountNo = res.data['daccountNo']
             this.phoneNO = tableData[index]['tel'] //这里为什么出错
             this.address = res.data['address']
             this.birthday = res.data['birthday']
-            this.sex = res.data['sex']
+            if(res.data['sex']==="m"){
+              this.sex="男性"
+            }else if(res.data['sex']==='f'){
+              this.sex="女性"
+            }else {
+
+            }
             this.introduction = res.data['introduction']
             this.expertise = res.data['expertise']
             this.achievements = res.data['achievements']
