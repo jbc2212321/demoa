@@ -54,61 +54,61 @@
 
             <el-form-item label="国籍">
                 <el-col :span="4">
-                    <el-input v-model="nationality"></el-input>
+                    <el-input v-model="nationality" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="籍贯">
                 <el-col :span="4">
-                    <el-input v-model="nativePlace"></el-input>
+                    <el-input v-model="nativePlace" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="民族">
                 <el-col :span="4">
-                    <el-input v-model="nation"></el-input>
+                    <el-input v-model="nation" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="毕业院校">
                 <el-col :span="6">
-                    <el-input v-model="college"></el-input>
+                    <el-input v-model="college" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="详细地址">
                 <el-col :span="6">
-                    <el-input v-model="address"></el-input>
+                    <el-input v-model="address" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="擅长领域">
                 <el-col :span="6">
-                    <el-input type="textarea" v-model="expertise"></el-input>
+                    <el-input type="textarea" v-model="expertise" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="个人著作">
                 <el-col :span="6">
-                    <el-input type="textarea" v-model="works"></el-input>
+                    <el-input type="textarea" v-model="works" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="个人简介">
                 <el-col :span="6">
-                    <el-input type="textarea" v-model="introduction"></el-input>
+                    <el-input type="textarea" v-model="introduction" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="个人成就">
                 <el-col :span="6">
-                    <el-input type="textarea" v-model="achievements"></el-input>
+                    <el-input type="textarea" v-model="achievements" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 
             <el-form-item label="社会评价">
                 <el-col :span="6">
-                    <el-input type="textarea" v-model="evaluation"></el-input>
+                    <el-input type="textarea" v-model="evaluation" maxlength="100"></el-input>
                 </el-col>
             </el-form-item>
 

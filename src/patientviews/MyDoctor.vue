@@ -492,7 +492,7 @@
           if (row['state'] === 0) {
             this.$message({
               showClose: true,
-              message: '已提交筛选！',
+              message: '已向管理员提交！',
               type: 'warning'
             })
             return

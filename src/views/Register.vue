@@ -15,7 +15,7 @@
 
                     <el-col :span="6" :offset="9">
                         <el-form-item label="手机号" :required="true">
-                            <el-input placeholder="请输入手机号" v-model="phoneNumber" clearable></el-input>
+                            <el-input placeholder="请输入手机号" maxlength="11" v-model="phoneNumber" clearable></el-input>
                         </el-form-item>
                     </el-col>
 

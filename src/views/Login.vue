@@ -72,7 +72,7 @@
           <el-row>
             <el-col :span="20">
               <el-form-item label="电话号码" :label-width="formLabelWidth">
-                <el-input v-model="form.tel"></el-input>
+                <el-input v-model="form.tel" maxlength="11"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
